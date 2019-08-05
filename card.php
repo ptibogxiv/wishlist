@@ -172,7 +172,7 @@ if (empty($reshook))
 		// Insert member
 		$sql = "UPDATE ".MAIN_DB_PREFIX."wishlist";
     $sql.= " SET qty = '".$db->escape(GETPOST('qty', 'int'))."'";
-    $sql.= ", target = '".$db->escape(GETPOST('target', 'int'))."'";
+    $sql.= ", target = '".(!empty(GETPOST('target', 'int'))?$db->escape(GETPOST('target', 'int')):0)."'";
     $sql.= " WHERE rowid = '".$lineid."'";
 
 		//dol_syslog(get_class($this)."::create", LOG_DEBUG);
