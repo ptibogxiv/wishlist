@@ -285,7 +285,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
 		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target";
-    $sql.= ", p.label, p.ref as ref";
+    $sql.= ", p.label, p.ref as ref, p.fk_product_type as type";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
     $sql.= ", (SELECT d.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as lastqty";
@@ -414,6 +414,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		    $product_static->id = $objp->product;
 		    $product_static->ref = $objp->ref;
         $product_static->label = $objp->label;
+        $product_static->type = $objp->type;
 		        // Product/service
 		  print '<tr class="oddeven">';
 			print '<td class="tdoverflowmax200">';
@@ -558,6 +559,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 		$product_static->id = $wishlist->product;
 		$product_static->ref = $wishlist->product_ref;
     $product_static->label = $wishlist->product_label;
+    $product_static->type = $wishlist->product_type;
 	print '<td>';
 	print $product_static->getNomUrl(1)." - ".$wishlist->product_label;
 	print "</td>";

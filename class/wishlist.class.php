@@ -29,6 +29,7 @@ class Wishlist extends CommonObject
   public $product;
   public $product_ref;
   public $product_label;
+  public $product_type;
   public $socid;
   public $qty;
   public $target;
@@ -102,7 +103,7 @@ class Wishlist extends CommonObject
 	public function fetch($id)
 	{
 		$sql = 'SELECT t.rowid, t.fk_soc, t.fk_product as product, t.qty as qty, t.target as target';
-    $sql.= ', p.label, p.ref as ref';
+    $sql.= ', p.label, p.ref as ref, p.fk_product_type as type';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'wishlist as t LEFT JOIN '.MAIN_DB_PREFIX.'product as p ON p.rowid = t.fk_product';
 		$sql.= ' WHERE t.entity IN (' . getEntity('product').')';
 		$sql.= ' AND t.rowid = '.$id;    
@@ -118,6 +119,7 @@ class Wishlist extends CommonObject
         $this->product        = $obj->product;
         $this->product_ref    = $obj->ref;
         $this->product_label  = $obj->label;
+        $this->product_type   = $obj->type;
         $this->qty            = $obj->qty;
         $this->target         = $obj->target;
 
