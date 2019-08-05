@@ -113,11 +113,12 @@ if (empty($reshook))
 
 		// Insert member
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."wishlist";
-		$sql.= " (fk_product,fk_soc,qty,entity)";
+		$sql.= " (fk_product, fk_soc, qty, target, entity)";
 		$sql.= " VALUES (";
 		$sql.= "'".$db->escape(GETPOST('productid', 'alpha'))."'";
 		$sql.= ", '".$db->escape($socid)."'";
     $sql.= ", '".$db->escape(GETPOST('qty', 'int'))."'";
+    $sql.= ", '".$db->escape(GETPOST('target', 'int'))."'";
 		$sql.= ", ".$conf->entity;
 		$sql.= ")";
 
@@ -205,10 +206,11 @@ dol_fiche_end();
 		print $form->formconfirm($_SERVER["PHP_SELF"]."?socid=".$object->id."&lineid=".($lineid), $langs->trans("DeleteAProduct"), $langs->trans("ConfirmDeleteProduct", ''), "confirm_delete", '', 0, 1);
 	}
   
-		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty";
+		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target";
     $sql.= " , p.label, p.ref as ref,";
     $sql.= " (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid,";
     $sql.= " (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
+    $sql.= " (SELECT c.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as last_qty";
     $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
     $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
 		$sql.= " WHERE t.entity IN (".getEntity('societe').") ";
@@ -301,7 +303,8 @@ dol_fiche_end();
 
 			print '<td class="liste_titre" align="left">';
 			print '<input class="flat" type="text" name="search_qty" value="'.dol_escape_htmltag($search_qty).'" size="5"></td>';
-
+      
+      print '<td align="center" class="liste_titre"></td>';
 			print '<td align="center" class="liste_titre" colspan="2">'.$langs->trans("LastOrder").'</td>';
 
 			print '<td align="right"  class="liste_titre">';
@@ -316,6 +319,7 @@ dol_fiche_end();
 		    print_liste_field_titre( $langs->trans("Ref"),$_SERVER["PHP_SELF"],"p.ref",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("Label",$_SERVER["PHP_SELF"],"p.label",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("Qty",$_SERVER["PHP_SELF"],"t.qty",$param,"","",$sortfield,$sortorder);
+        print_liste_field_titre("Target",$_SERVER["PHP_SELF"],"t.target",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("Ref",$_SERVER["PHP_SELF"],"orderid",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("OrderDateShort",$_SERVER["PHP_SELF"],"date_commande",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("Action",$_SERVER["PHP_SELF"],"",$param,"",'width="90" align="center"',$sortfield,$sortorder);
@@ -341,7 +345,11 @@ dol_fiche_end();
 
 		        // Qty
             $quantity= GETPOSTISSET('qty')?GETPOST('qty'):$objp->qty;
- 		        print "<td><input type='text' name='qty' value='".$quantity."' size='5'></td>";           
+ 		        print "<td><input type='text' name='qty' value='".$quantity."' size='5'></td>";
+             
+		        // Target
+            $quantity= GETPOSTISSET('target')?GETPOST('target'):$objp->target;
+ 		        print "<td>".$objp->target."</td>";                            
 
 		        // Last order
             if (! empty($objp->orderid)) {
@@ -349,7 +357,7 @@ dol_fiche_end();
             $commandestatic->fetch($objp->orderid);            
             $commandestatic->id = $objp->orderid;
             $commandestatic->ref = $commandestatic->ref;
- 		        print "<td>".$commandestatic->getNomUrl(1,'',200,0,'',0,1)."</td>";
+ 		        print "<td>".$commandestatic->getNomUrl(1,'',200,0,'',0,1)." ".$objp->last_qty."</td>";
             } else {
  		        print "<td></td>";            
             }
@@ -420,6 +428,9 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
 	print '<td><input class="minwidth200" type="text" name="qty" value="'.GETPOST('qty', 'int').'"></td></tr>';
+
+	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
+	print '<td><input class="minwidth200" type="text" name="target" value="'.GETPOST('target', 'int').'"></td></tr>';
 
 	print '</table>';
 
