@@ -1,0 +1,56 @@
+= WISHLIST =
+:subtitle: WISHLIST DOCUMENTATION
+:source-highlighter: rouge
+:companyname: ptibogxiv.net
+:corpname: ptibogxiv.net
+:orgname: ptibogxiv.net
+:creator: Thibault FOUCART
+:title: Documentation of module Wishlist
+:subject: This document is the document of module Wishlist.
+:keywords: Wishlist
+// Date du document :
+:docdate: 2019-08-01
+:toc: manual
+:toc-placement: preamble
+
+
+== TOPIC OF DOCUMENT
+
+This is the documentation of module Wishlist
+
+
+*Log of versions of document*
+
+[options="header",format="csv"]
+|=== 
+Author, Date, Version
+--- Thibault FOUCART  ptibogxiv@msn.com ---, 2019-08-01, Version 1.0
+|===
+
+
+[NOTE]
+==============
+This document was generated using Dolibarr ERP CRM process
+==============
+
+
+:toc: manual
+:toc-placement: preamble
+
+<<<
+
+== INTRODUCTION
+
+//include::README.md[]
+__README__
+
+== DATA SPECIFICATIONS
+
+__DATA_SPECIFICATION__
+
+
+== CHANGELOG
+
+//include::ChangeLog.md[]
+__CHANGELOG__
+
