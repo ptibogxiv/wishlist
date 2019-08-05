@@ -121,7 +121,7 @@ if (empty($reshook))
 		$sql.= "'".$db->escape(GETPOST('productid', 'alpha'))."'";
 		$sql.= ", '".$db->escape($socid)."'";
     $sql.= ", '".$db->escape(GETPOST('qty', 'int'))."'";
-    $sql.= ", '".$db->escape(GETPOST('target', 'int'))."'";
+    $sql.= ", '".(!empty(GETPOST('target', 'int'))?$db->escape(GETPOST('target', 'int')):0)."'";
 		$sql.= ", ".$conf->entity;
 		$sql.= ")";
 
@@ -431,7 +431,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		        // Target
             $quantity= GETPOSTISSET('target')?GETPOST('target'):$objp->target;
  		        print "<td>".$objp->totalqty;
-            print "/".$objp->target;
+            if (!empty($objp->target)) print "/".$objp->target;
             print "</td>";                            
 
 		        // Last order
@@ -517,7 +517,7 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
   print '</td></tr>';
 
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
-	print '<td><input class="minwidth200" type="text" name="qty" value="'.GETPOST('qty', 'int').'"></td></tr>';
+	print '<td><input class="minwidth200" type="text" name="qty" value="'.(GETPOST('qty', 'int')?GETPOST('qty', 'int'):1).'"></td></tr>';
 
 	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.GETPOST('target', 'int').'"></td></tr>';
