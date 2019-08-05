@@ -98,7 +98,7 @@ if (empty($reshook))
 		}
 	}
   
-	if ($action == 'add')
+	if ($action == 'add' && $user->rights->societe->creer)
 	{
 		$error=0;
 
@@ -136,6 +136,57 @@ if (empty($reshook))
 					$error++;
 					//setEventMessages($companypaymentmode->error, $companypaymentmode->errors, 'errors');
 					$action='create';     // Force chargement page création
+				}
+			}
+
+			if (! $error)
+			{
+				$db->commit();
+
+				$url=$_SERVER["PHP_SELF"].'?socid='.$object->id;
+				header('Location: '.$url);
+				exit;
+			}
+			else
+			{
+				$db->rollback();
+			}
+		}
+	}
+  
+	if ($action == 'update' && $user->rights->societe->creer)
+	{
+		$error=0;
+
+		if (! GETPOST('productid', 'alpha') || ! GETPOST('qty', 'int'))
+		{
+			if (! GETPOST('productid', 'alpha')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ProductOrService")), null, 'errors');
+			if (! GETPOST('qty', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Qty")), null, 'errors');
+			$action='edit';
+			$error++;
+		}
+
+		if (! $error)
+		{
+		$db->begin();
+
+		// Insert member
+		$sql = "UPDATE ".MAIN_DB_PREFIX."wishlist";
+    $sql.= " SET qty = '".$db->escape(GETPOST('qty', 'int'))."'";
+    $sql.= ", target = '".$db->escape(GETPOST('target', 'int'))."'";
+    $sql.= " WHERE rowid = " . $lineid;
+
+		//dol_syslog(get_class($this)."::create", LOG_DEBUG);
+		$result = $db->query($sql);
+
+			if (! $error)
+			{
+				//$result = $companypaymentmode->create($user);
+				if ($result < 0)
+				{
+					$error++;
+					//setEventMessages($companypaymentmode->error, $companypaymentmode->errors, 'errors');
+					$action='edit';     // Force chargement page création
 				}
 			}
 
@@ -526,7 +577,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 	dol_set_focus('#label');
 
 	print '<div class="center">';
-	print '<input class="button" value="'.$langs->trans("Add").'" type="submit">';
+	print '<input class="button" value="'.$langs->trans("Update").'" type="submit">';
 	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	print '<input name="cancel" class="button" value="'.$langs->trans("Cancel").'" type="submit">';
 	print '</div>';
