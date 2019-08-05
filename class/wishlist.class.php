@@ -112,13 +112,13 @@ class Wishlist extends CommonObject
 			if ($this->db->num_rows($resql))
 			{
 				$obj = $this->db->fetch_object($resql);
-				$this->id             = $obj->rowid;
-				$this->socid          = $obj->fk_soc;
-				$this->product        = $obj->product;
+        $this->id             = $obj->rowid;
+        $this->socid          = $obj->fk_soc;
+        $this->product        = $obj->product;
         $this->product_ref    = $obj->ref;
         $this->product_label  = $obj->label;
-				$this->qty            = $obj->qty;
-				$this->target         = $obj->target;
+        $this->qty            = $obj->qty;
+        $this->target         = $obj->target;
 
 				$this->db->free($resql);
 				return 1;
