@@ -24,6 +24,7 @@
 $res=@include("../main.inc.php");                                // For root directory
 if (! $res) $res=@include("../../main.inc.php");                // For "custom" directory
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
@@ -206,12 +207,30 @@ dol_fiche_end();
 		print $form->formconfirm($_SERVER["PHP_SELF"]."?socid=".$object->id."&lineid=".($lineid), $langs->trans("DeleteAProduct"), $langs->trans("ConfirmDeleteProduct", ''), "confirm_delete", '', 0, 1);
 	}
   
+
+$year_current = strftime("%Y", dol_now());
+$month_current = strftime("%m", dol_now());
+$year_start = $year_current;
+
+// We define date_start and date_end
+$year_end=$year_start + 1;
+$month_start=$conf->global->SOCIETE_FISCAL_MONTH_START?($conf->global->SOCIETE_FISCAL_MONTH_START):1;
+if ($month_start > $month_current)
+{
+$year_start--;
+$year_end--;
+}
+$month_end=$month_start-1;
+if ($month_end < 1) $month_end=12;
+$date_start=dol_get_first_day($year_start, $month_start, false); 
+//$date_end=dol_get_last_day($year_end, $month_end, false);
+  
 		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target";
     $sql.= " , p.label, p.ref as ref";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
     $sql.= ", (SELECT d.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as lastqty";
-    $sql.= ", (SELECT sum(d.qty) FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." and date_commande > '2019-01-01' ORDER BY c.date_commande DESC) as totalqty";
+    $sql.= ", (SELECT sum(d.qty) FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." AND date_commande >= '".$date_start."') as totalqty";
     $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
     $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
 		$sql.= " WHERE t.entity IN (".getEntity('societe').") ";
