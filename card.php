@@ -373,8 +373,8 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		        print '<td class="tdoverflowmax200">'.dol_trunc($objp->label, 80).'</td>';
 
 		        // Qty
-            $quantity= GETPOSTISSET('qty')?GETPOST('qty'):$objp->qty;
- 		        print "<td><input type='text' name='qty' value='".$quantity."' size='5'></td>";
+            $quantity= GETPOSTISSET('quantity')?GETPOST('quantity'):$objp->qty;
+ 		        print "<td><input type='text' name='quantity' value='".$quantity."' size='5'></td>";
              
 		        // Target
             $quantity= GETPOSTISSET('target')?GETPOST('target'):$objp->target;
@@ -515,7 +515,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 	print '<td><input class="minwidth200" type="text" name="qty" value="'.(GETPOST('qty','int')?GETPOST('qty','int'):$wishlist->qty).'"></td></tr>';
 
 	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
-	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wishlist->qty).'"></td></tr>';
+	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wishlist->target).'"></td></tr>';
 
 	print '</table>';
 

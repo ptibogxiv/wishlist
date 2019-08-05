@@ -104,6 +104,7 @@ class Wishlist extends CommonObject
     $sql.= ', p.label, p.ref as ref';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'wishlist as t LEFT JOIN '.MAIN_DB_PREFIX.'product as p ON p.rowid = t.fk_product';
 		$sql.= ' WHERE t.entity IN (' . getEntity('product').')';
+		$sql.= ' AND t.rowid = '.$id;    
 
 		$resql = $this->db->query($sql);
 		if ($resql)
