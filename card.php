@@ -350,7 +350,7 @@ dol_fiche_end();
              
 		        // Target
             $quantity= GETPOSTISSET('target')?GETPOST('target'):$objp->target;
- 		        print "<td>".$objp->target."</td>";                            
+ 		        print "<td>".$objp->target."/".$objp->target."</td>";                            
 
 		        // Last order
             if (! empty($objp->orderid)) {
