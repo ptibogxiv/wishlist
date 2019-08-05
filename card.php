@@ -28,6 +28,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
+dol_include_once('/wishlist/class/wishlist.class.php');
 
 $langs->loadLangs(array("companies", "products", "orders"));
 
@@ -188,6 +189,14 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 	$actionforadd='add';
 	print '<input type="hidden" name="action" value="'.$actionforadd.'">';
+}
+
+if ($socid && $action == 'edit' && $user->rights->societe->creer)
+{
+	print '<form action="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'" method="post">';
+	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+	$actionforedir='update';
+	print '<input type="hidden" name="action" value="'.$actionforedit.'">';
 }
 
 // View
@@ -485,25 +494,28 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	dol_banner_tab($object, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
 
+  $wishlist = new Wishlist($db);
+  $wishlist->fetch($lineid);  
+
 	print '<div class="nofichecenter">';
 
 	print '<div class="underbanner clearboth"></div>';
 	print '<table class="border centpercent">';
 
 	print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans("PredefinedProductsAndServicesToSell").'</td>';
-	      $product_static = new Product($db);
-		    $product_static->id = '226';
-		    $product_static->ref = 'SV1902-0002';
-			print '<td>';
-			print $product_static->getNomUrl(1);
-			print "</td>";
+	  $product_static = new Product($db);
+		$product_static->id = $wishlist->product;
+		$product_static->ref = $wishlist->product_ref;
+	print '<td>';
+	print $product_static->getNomUrl(1);
+	print "</td>";
   print '</td></tr>';
 
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
-	print '<td><input class="minwidth200" type="text" name="qty" value="'.GETPOST('qty', 'int').'"></td></tr>';
+	print '<td><input class="minwidth200" type="text" name="qty" value="'.(GETPOST('qty','int')?GETPOST('qty','int'):$wishlist->qty).'"></td></tr>';
 
 	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
-	print '<td><input class="minwidth200" type="text" name="target" value="'.GETPOST('target', 'int').'"></td></tr>';
+	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wishlist->qty).'"></td></tr>';
 
 	print '</table>';
 
