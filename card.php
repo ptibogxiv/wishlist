@@ -413,7 +413,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 	      $product_static = new Product($db);
 		    $product_static->id = $objp->product;
 		    $product_static->ref = $objp->ref;
-        $product_static->label = $wishlist->label;
+        $product_static->label = $objp->label;
 		        // Product/service
 		  print '<tr class="oddeven">';
 			print '<td class="tdoverflowmax200">';
@@ -559,7 +559,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 		$product_static->ref = $wishlist->product_ref;
     $product_static->label = $wishlist->product_label;
 	print '<td>';
-	print $product_static->getNomUrl(1)." ".$wishlist->product_label;
+	print $product_static->getNomUrl(1)." - ".$wishlist->product_label;
 	print "</td>";
   print '</td></tr>';
 
