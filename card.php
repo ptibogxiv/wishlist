@@ -222,7 +222,7 @@ $year_end--;
 }
 $month_end=$month_start-1;
 if ($month_end < 1) $month_end=12;
-$date_start=dol_get_first_day($year_start, $month_start, false); 
+$date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false), '%Y-%m-%d'); 
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
 		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target";
