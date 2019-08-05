@@ -158,9 +158,8 @@ if (empty($reshook))
 	{
 		$error=0;
 
-		if (! GETPOST('productid', 'alpha') || ! GETPOST('qty', 'int'))
+		if (! GETPOST('qty', 'int'))
 		{
-			if (! GETPOST('productid', 'alpha')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ProductOrService")), null, 'errors');
 			if (! GETPOST('qty', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Qty")), null, 'errors');
 			$action='edit';
 			$error++;
@@ -246,7 +245,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 {
 	print '<form action="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'" method="post">';
 	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-	$actionforedir='update';
+	$actionforedit='update';
 	print '<input type="hidden" name="action" value="'.$actionforedit.'">';
 }
 
