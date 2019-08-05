@@ -173,7 +173,7 @@ if (empty($reshook))
 		$sql = "UPDATE ".MAIN_DB_PREFIX."wishlist";
     $sql.= " SET qty = '".$db->escape(GETPOST('qty', 'int'))."'";
     $sql.= ", target = '".$db->escape(GETPOST('target', 'int'))."'";
-    $sql.= " WHERE rowid = " . $lineid;
+    $sql.= " WHERE rowid = '".$lineid."'";
 
 		//dol_syslog(get_class($this)."::create", LOG_DEBUG);
 		$result = $db->query($sql);
@@ -575,7 +575,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	dol_set_focus('#label');
 
-	print '<div class="center">';
+	print '<div class="center"><input type="hidden" name="lineid" value="'.$lineid.'">';
 	print '<input class="button" value="'.$langs->trans("Edit").'" type="submit">';
 	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	print '<input name="cancel" class="button" value="'.$langs->trans("Cancel").'" type="submit">';
