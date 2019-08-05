@@ -577,7 +577,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 	dol_set_focus('#label');
 
 	print '<div class="center">';
-	print '<input class="button" value="'.$langs->trans("Update").'" type="submit">';
+	print '<input class="button" value="'.$langs->trans("Edit").'" type="submit">';
 	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	print '<input name="cancel" class="button" value="'.$langs->trans("Cancel").'" type="submit">';
 	print '</div>';
