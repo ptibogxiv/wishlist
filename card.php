@@ -61,6 +61,7 @@ $label=GETPOST("label","alpha");
 $description=GETPOST("description","alpha");
 $qty=GETPOST("qty","int");
 $lineid=GETPOST("lineid","int");
+$target=GETPOST("target","int");
 
 if ($user->societe_id) $socid=$user->societe_id;
 $result = restrictedArea($user, 'societe', $socid, '&societe');
@@ -206,7 +207,6 @@ dol_fiche_end();
 	{
 		print $form->formconfirm($_SERVER["PHP_SELF"]."?socid=".$object->id."&lineid=".($lineid), $langs->trans("DeleteAProduct"), $langs->trans("ConfirmDeleteProduct", ''), "confirm_delete", '', 0, 1);
 	}
-  
 
 $year_current = strftime("%Y", dol_now());
 $month_current = strftime("%m", dol_now());
@@ -294,7 +294,6 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		    if (! empty($status))			$param.="&status=".$status;
 		    if (! empty($search_ref))	$param.="&search_ref=".$search_ref;
 		    if (! empty($search_label))		$param.="&search_label=".$search_label;
-		    if (! empty($search_email))		$param.="&search_email=".$search_email;
 		    if (! empty($filter))			$param.="&filter=".$filter;
 
 			print '<input class="flat" type="hidden" name="socid" value="'.$socid.'" size="12">';
