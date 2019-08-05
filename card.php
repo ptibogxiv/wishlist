@@ -207,10 +207,10 @@ dol_fiche_end();
 	}
   
 		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target";
-    $sql.= " , p.label, p.ref as ref,";
-    $sql.= " (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid,";
-    $sql.= " (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
-    $sql.= " (SELECT c.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as last_qty";
+    $sql.= " , p.label, p.ref as ref";
+    $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
+    $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
+    $sql.= ", (SELECT d.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as lastqty";
     $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
     $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
 		$sql.= " WHERE t.entity IN (".getEntity('societe').") ";
@@ -305,7 +305,7 @@ dol_fiche_end();
 			print '<input class="flat" type="text" name="search_qty" value="'.dol_escape_htmltag($search_qty).'" size="5"></td>';
       
       print '<td align="center" class="liste_titre"></td>';
-			print '<td align="center" class="liste_titre" colspan="2">'.$langs->trans("LastOrder").'</td>';
+			print '<td align="center" class="liste_titre" colspan="3">'.$langs->trans("LastOrder").'</td>';
 
 			print '<td align="right"  class="liste_titre">';
 			print '<input type="image" class="liste_titre" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/search.png" name="button_search" value="'.dol_escape_htmltag($langs->trans("Search")).'" title="'.dol_escape_htmltag($langs->trans("Search")).'">';
@@ -321,6 +321,7 @@ dol_fiche_end();
 		    print_liste_field_titre("Qty",$_SERVER["PHP_SELF"],"t.qty",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("Target",$_SERVER["PHP_SELF"],"t.target",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("Ref",$_SERVER["PHP_SELF"],"orderid",$param,"","",$sortfield,$sortorder);
+        print_liste_field_titre("LastQty",$_SERVER["PHP_SELF"],"lastqty",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("OrderDateShort",$_SERVER["PHP_SELF"],"date_commande",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("Action",$_SERVER["PHP_SELF"],"",$param,"",'width="90" align="center"',$sortfield,$sortorder);
 		    print "</tr>\n";
@@ -357,10 +358,17 @@ dol_fiche_end();
             $commandestatic->fetch($objp->orderid);            
             $commandestatic->id = $objp->orderid;
             $commandestatic->ref = $commandestatic->ref;
- 		        print "<td>".$commandestatic->getNomUrl(1,'',200,0,'',0,1)." ".$objp->last_qty."</td>";
+ 		        print "<td>".$commandestatic->getNomUrl(1,'',200,0,'',0,1)."</td>";
             } else {
  		        print "<td></td>";            
             }
+            
+		        // Last order
+            if (! empty($objp->orderid)) {
+ 		        print "<td>".$objp->lastqty."</td>";
+            } else {
+ 		        print "<td></td>";            
+            }            
             
             // Date order
  		        print "<td>".dol_print_date($db->jdate($objp->date_commande), 'day')."</td>";
