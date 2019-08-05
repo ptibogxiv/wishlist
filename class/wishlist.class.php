@@ -116,6 +116,7 @@ class Wishlist extends CommonObject
 				$this->socid          = $obj->fk_soc;
 				$this->product        = $obj->product;
         $this->product_ref    = $obj->ref;
+        $this->product_label  = $obj->label;
 				$this->qty            = $obj->qty;
 				$this->target         = $obj->target;
 

@@ -556,6 +556,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 	  $product_static = new Product($db);
 		$product_static->id = $wishlist->product;
 		$product_static->ref = $wishlist->product_ref;
+    $product_static->label = $wishlist->product_label;
 	print '<td>';
 	print $product_static->getNomUrl(1);
 	print "</td>";
