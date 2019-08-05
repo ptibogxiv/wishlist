@@ -28,6 +28,7 @@ class Wishlist extends CommonObject
 	public $id;
   public $product;
   public $product_ref;
+  public $product_label;
   public $socid;
   public $qty;
   public $target;
