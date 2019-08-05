@@ -211,6 +211,7 @@ dol_fiche_end();
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
     $sql.= ", (SELECT d.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as lastqty";
+    $sql.= ", (SELECT sum(d.qty) FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." and date_commande > '2019-01-01' ORDER BY c.date_commande DESC) as totalqty";
     $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
     $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
 		$sql.= " WHERE t.entity IN (".getEntity('societe').") ";
@@ -350,7 +351,7 @@ dol_fiche_end();
              
 		        // Target
             $quantity= GETPOSTISSET('target')?GETPOST('target'):$objp->target;
- 		        print "<td>".$objp->target;
+ 		        print "<td>".$objp->totalqty;
             if (! empty($objp->target)) print "/".$objp->target;
             print "</td>";                            
 
