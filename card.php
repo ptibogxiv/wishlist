@@ -429,7 +429,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
  		        print "<td><input type='text' name='quantity' value='".$quantity."' size='5'></td>";
              
 		        // Target
-            $quantity= GETPOSTISSET('target')?GETPOST('target'):$objp->target
+            $quantity= GETPOSTISSET('target')?GETPOST('target'):$objp->target;
             print "<td>";
  		        if (!empty($objp->totalqty)) print $objp->totalqty;
             if (!empty($objp->totalqty) && !empty($objp->target)) print "/";            
