@@ -191,7 +191,7 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 }
 
 // View
-if ($socid && $action !='create')
+if ($socid && $action !='create' && $action !='edit')
 {
 
 dol_fiche_head($head, 'wishlist', $langs->trans("ThirdParty"), 0, 'company');
@@ -453,6 +453,50 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 			{
 				$form->select_produits(GETPOST('productid', 'int'), 'productid', $filtertype, $conf->product->limit_size, $object->price_level, 1, 2, '', 1, array(), $object->id, '1', 0, 'maxwidth300', 0, '', GETPOST('combinations', 'array'));
 			}
+  print '</td></tr>';
+
+	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
+	print '<td><input class="minwidth200" type="text" name="qty" value="'.GETPOST('qty', 'int').'"></td></tr>';
+
+	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
+	print '<td><input class="minwidth200" type="text" name="target" value="'.GETPOST('target', 'int').'"></td></tr>';
+
+	print '</table>';
+
+	print '</div>';
+
+	dol_fiche_end();
+
+	dol_set_focus('#label');
+
+	print '<div class="center">';
+	print '<input class="button" value="'.$langs->trans("Add").'" type="submit">';
+	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+	print '<input name="cancel" class="button" value="'.$langs->trans("Cancel").'" type="submit">';
+	print '</div>';
+}
+
+// Create Card
+if ($socid && $action == 'edit' && $user->rights->societe->creer)
+{
+	dol_fiche_head($head, 'wishlist', $langs->trans("ThirdParty"), 0, 'company');
+
+	$linkback = '<a href="'.DOL_URL_ROOT.'/societe/list.php">'.$langs->trans("BackToList").'</a>';
+
+	dol_banner_tab($object, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
+
+	print '<div class="nofichecenter">';
+
+	print '<div class="underbanner clearboth"></div>';
+	print '<table class="border centpercent">';
+
+	print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans("PredefinedProductsAndServicesToSell").'</td>';
+	      $product_static = new Product($db);
+		    $product_static->id = '226';
+		    $product_static->ref = 'SV1902-0002';
+			print '<td>';
+			print $product_static->getNomUrl(1);
+			print "</td>";
   print '</td></tr>';
 
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
