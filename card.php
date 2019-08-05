@@ -370,7 +370,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		        // Target
             $quantity= GETPOSTISSET('target')?GETPOST('target'):$objp->target;
  		        print "<td>".$objp->totalqty;
-            if (! empty($objp->target)) print "/".$objp->target;
+            print "/".$objp->target;
             print "</td>";                            
 
 		        // Last order
