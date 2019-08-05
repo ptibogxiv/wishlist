@@ -226,7 +226,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
 		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target";
-    $sql.= " , p.label, p.ref as ref";
+    $sql.= ", p.label, p.ref as ref";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
     $sql.= ", (SELECT d.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as lastqty";
