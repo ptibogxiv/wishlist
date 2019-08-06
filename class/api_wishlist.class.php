@@ -57,6 +57,7 @@ class Wishlist extends DolibarrApi
      */
 	  public $company;
     public $product;
+    public $wishlist;
 
     /**
      * Constructor
@@ -70,9 +71,11 @@ class Wishlist extends DolibarrApi
 		require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
     require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 		require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
+    //dol_include_once('/wishlist/class/wishlist.class.php');
 
 		$this->company = new Societe($this->db);
     $this->product = new Product($this->db);
+    //$this->wishlist = new Wishlist($this->db);
     }
     
     /**
@@ -96,7 +99,7 @@ class Wishlist extends DolibarrApi
 
         $socid = DolibarrApiAccess::$user->societe_id ? DolibarrApiAccess::$user->societe_id : '';
 
-        $sql = "SELECT t.rowid, t.fk_product, t.qty";
+        $sql = "SELECT t.rowid, t.fk_product, t.qty, t.target";
         $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
         if ($category > 0) {
             $sql.= ", ".MAIN_DB_PREFIX."categorie_product as c";
@@ -150,7 +153,7 @@ class Wishlist extends DolibarrApi
             }
         }
         else {
-            throw new RestException(503, 'Error when retrieve product list : '.$db->lasterror());
+            throw new RestException(503, 'Error when retrieve wish list : '.$db->lasterror());
         }
         if(! count($obj_ret)) {
             throw new RestException(404, 'No product found');
