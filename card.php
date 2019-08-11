@@ -207,7 +207,7 @@ if (empty($reshook))
 	if ($action == 'confirm_delete' && GETPOST('confirm', 'alpha') == 'yes')
 	{
 $db->begin();
-$sql  = "DELETE FROM ".MAIN_DB_PREFIX."wishlist WHERE rowid = ".$lineid." AND fk_soc = ".$socid." ";
+$sql = "DELETE FROM ".MAIN_DB_PREFIX."wishlist WHERE rowid = ".$lineid." AND fk_soc = ".$socid." ";
 $resql = $db->query($sql);
 $db->commit();
 	}
@@ -548,7 +548,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	dol_banner_tab($object, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
 
-  $wishlist = new Wishlist($db);
+  $wishlist = new Wish($db);
   $wishlist->fetch($lineid);  
 
 	print '<div class="nofichecenter">';

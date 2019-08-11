@@ -23,7 +23,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
  *	\class      Wishlist
  *	\brief      Class for Wishlist
  */
-class Wishlist extends CommonObject
+class Wish extends CommonObject
 {
 	public $id;
   public $product;
@@ -138,4 +138,49 @@ class Wishlist extends CommonObject
 			return -1;
 		}
 	}
+  
+	/**
+	 *  Fonction qui supprime le souhait
+	 *
+	 *  @param	int		$rowid		Id of member to delete
+	 *	@param	User		$user		User object
+	 *	@param	int		$notrigger	1=Does not execute triggers, 0= execute triggers
+	 *  @return	int					<0 if KO, 0=nothing to do, >0 if OK
+	 */
+	public function delete($rowid, $user, $notrigger = 0)
+	{
+		global $conf, $langs;
+
+		$result = 0;
+		$error=0;
+		$errorflag=0;
+
+		// Check parameters
+		if (empty($rowid)) $rowid=$this->id;
+
+		$this->db->begin();
+
+		// Remove wish
+			$sql = "DELETE FROM ".MAIN_DB_PREFIX."wishlist WHERE rowid = ".$rowid;
+			dol_syslog(get_class($this)."::delete", LOG_DEBUG);
+			$resql=$this->db->query($sql);
+			if (! $resql)
+			{
+				$error++;
+				$this->error .= $this->db->lasterror();
+				$errorflag=-5;
+			}
+
+		if (! $error)
+		{
+			$this->db->commit();
+			return 1;
+		}
+		else
+		{
+			$this->db->rollback();
+			return $errorflag;
+		}
+	}
+  
 }
