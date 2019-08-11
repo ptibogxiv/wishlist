@@ -582,7 +582,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 		$product_static->id = $wish->product;
 		$product_static->ref = $wish->ref;
     $product_static->label = $wish->label;
-    $product_static->type = $wish->product_type;
+    $product_static->type = $wish->fk_type;
 	print '<td>';
 	print $product_static->getNomUrl(1)." - ".$wish->label;
 	print "</td>";
