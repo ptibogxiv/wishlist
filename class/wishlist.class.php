@@ -84,6 +84,14 @@ class Wish extends CommonObject
 		
 		if (! $error)
 		{
+				if (! $notrigger)
+				{
+					// Call trigger
+					$result=$this->call_trigger('WISH_CREATE', $user);
+					if ($result < 0) { $error++; }
+					// End call triggers
+				}
+    
 			dol_syslog(get_class($this)."::create by $user->id", LOG_DEBUG);
 			$this->db->commit();
 			return 1;
