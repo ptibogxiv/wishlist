@@ -33,6 +33,11 @@ class Wish extends CommonObject
   public $socid;
   public $qty;
   public $target;
+  
+  public $date_creation;
+  public $date_modification;
+  public $fk_author_id;
+  public $fk_user_modification;
 	
 	/**
 	 * 	Constructor
@@ -68,10 +73,10 @@ class Wish extends CommonObject
     $sql.= " '".$this->db->idate($this->datec)."'";
 		$sql.= ", ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
 		$sql.= ", null";    
-		$sql.= ", '".$this->db->escape($this->productid)."'";
-		$sql.= ", '".$this->db->escape($this->socid)."'";
+		$sql.= ", '".$this->db->escape($this->fk_product)."'";
+		$sql.= ", '".$this->db->escape($this->fk_soc)."'";
     $sql.= ", '".$this->db->escape($this->qty)."'";
-    $sql.= ", '".(! empty($this->target) ? "'".$this->db->escape($this->target)."'":"null")."'";
+    $sql.= ", '".(! empty($this->target) ? "'".$this->db->escape($this->target)."'":"0")."'";
 		$sql.= ", ".$conf->entity;
 		$sql.= ")";
 		

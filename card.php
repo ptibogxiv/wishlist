@@ -110,9 +110,9 @@ if (empty($reshook))
 	{
 		$error=0;
 
-		if (! GETPOST('productid', 'alpha') || ! GETPOST('qty', 'int'))
+		if (! GETPOST('productid', 'int') || ! GETPOST('qty', 'int'))
 		{
-			if (! GETPOST('productid', 'alpha')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ProductOrService")), null, 'errors');
+			if (! GETPOST('productid', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ProductOrService")), null, 'errors');
 			if (! GETPOST('qty', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Qty")), null, 'errors');
 			$action='create';
 			$error++;
@@ -120,32 +120,25 @@ if (empty($reshook))
 
 		if (! $error)
 		{
-		$db->begin();
+  
+			// Ajout
+			$wish = new Wish($db);
 
-		// Insert member
-		$sql = "INSERT INTO ".MAIN_DB_PREFIX."wishlist";
-		$sql.= " (datec, fk_user_author, fk_user_mod, fk_product, fk_soc, qty, target, entity)";
-		$sql.= " VALUES (";
-    $sql.= " '".$db->idate(dol_now())."'";
-		$sql.= ", ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
-		$sql.= ", null";    
-		$sql.= ", '".$db->escape(GETPOST('productid', 'alpha'))."'";
-		$sql.= ", '".$db->escape($socid)."'";
-    $sql.= ", '".$db->escape(GETPOST('qty', 'int'))."'";
-    $sql.= ", '".(!empty(GETPOST('target', 'int'))?$db->escape(GETPOST('target', 'int')):0)."'";
-		$sql.= ", ".$conf->entity;
-		$sql.= ")";
+			$wish->fk_product     = GETPOST('productid', 'int');
+			$wish->fk_soc         = $socid;
+			$wish->qty            = GETPOST('qty', 'int');
+			$wish->target         = GETPOST('target', 'int');
+			$wish->entity         = $conf->entity;
 
-		//dol_syslog(get_class($this)."::create", LOG_DEBUG);
-		$result = $db->query($sql);
+			$db->begin();
 
 			if (! $error)
 			{
-				//$result = $companypaymentmode->create($user);
+				$result = $wish->create($user);
 				if ($result < 0)
 				{
 					$error++;
-					//setEventMessages($companypaymentmode->error, $companypaymentmode->errors, 'errors');
+					setEventMessages($wish->error, $wish->errors, 'errors');
 					$action='create';     // Force chargement page création
 				}
 			}
