@@ -36,8 +36,9 @@ class Wish extends CommonObject
   
   public $date_creation;
   public $date_modification;
-  public $fk_author_id;
-  public $fk_user_modification;
+
+  public $user_author_id;
+  public $user_modification;
 	
 	/**
 	 * 	Constructor
