@@ -580,11 +580,11 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 	print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans("PredefinedProductsAndServicesToSell").'</td>';
 	  $product_static = new Product($db);
 		$product_static->id = $wish->product;
-		$product_static->ref = $wish->product_ref;
-    $product_static->label = $wish->product_label;
+		$product_static->ref = $wish->ref;
+    $product_static->label = $wish->label;
     $product_static->type = $wish->product_type;
 	print '<td>';
-	print $product_static->getNomUrl(1)." - ".$wish->product_label;
+	print $product_static->getNomUrl(1)." - ".$wish->label;
 	print "</td>";
   print '</td></tr>';
 

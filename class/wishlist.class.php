@@ -27,8 +27,8 @@ class Wish extends CommonObject
 {
 	public $id;
   public $product;
-  public $product_ref;
-  public $product_label;
+  public $ref;
+  public $label;
   public $product_type;
   public $socid;
   public $qty;
@@ -117,8 +117,8 @@ class Wish extends CommonObject
         $this->id             = $obj->rowid;
         $this->socid          = $obj->fk_soc;
         $this->product        = $obj->product;
-        $this->product_ref    = $obj->ref;
-        $this->product_label  = $obj->label;
+        $this->ref            = $obj->ref;
+        $this->label          = $obj->label;
         $this->product_type   = $obj->type;
         $this->qty            = $obj->qty;
         $this->target         = $obj->target;

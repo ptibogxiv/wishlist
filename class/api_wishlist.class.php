@@ -168,9 +168,9 @@ class Wishlist extends DolibarrApi
             while ($i < $min)
             {
                 $obj = $db->fetch_object($result);
-                $product_static = new Product($db);
-                if($product_static->fetch($obj->fk_product)) {
-                    $obj_ret[] = $this->_cleanObjectDatas($product_static);
+                $wish_static = new Wish($db);
+                if($wish_static->fetch($obj->rowid)) {
+                    $obj_ret[] = $this->_cleanObjectDatas($wish_static);
                 }
                 $i++;
             }
