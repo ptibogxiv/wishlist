@@ -113,7 +113,7 @@ class Wish extends CommonObject
 	 */
 	public function fetch($id)
 	{
-		$sql = 'SELECT t.rowid, t.fk_soc, t.fk_product as product, t.qty as qty, t.target as target';
+		$sql = 'SELECT t.rowid, t.datec, t.tms as datem, t.fk_user_author, t.fk_user_mod, t.fk_soc, t.fk_product as product, t.qty as qty, t.target as target';
     $sql.= ', p.label, p.ref as ref, p.fk_product_type as type';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'wishlist as t LEFT JOIN '.MAIN_DB_PREFIX.'product as p ON p.rowid = t.fk_product';
 		$sql.= ' WHERE t.entity IN (' . getEntity('product').')';
@@ -133,6 +133,10 @@ class Wish extends CommonObject
         $this->fk_type        = $obj->type;
         $this->qty            = $obj->qty;
         $this->target         = $obj->target;
+        $this->date_creation  = $this->db->jdate($obj->datec);
+        $this->date_modification = $this->db->jdate($obj->datem);
+        $this->user_author_id    = $obj->qty;
+        $this->user_modification = $obj->fk_user_mod;
 
 				$this->db->free($resql);
 				return 1;
