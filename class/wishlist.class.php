@@ -140,7 +140,7 @@ class Wish extends CommonObject
         $this->target         = $obj->target;
         $this->date_creation  = $this->db->jdate($obj->datec);
         $this->date_modification = $this->db->jdate($obj->datem);
-        $this->user_author_id    = $obj->qty;
+        $this->user_author_id    = $obj->fk_user_author;
         $this->user_modification = $obj->fk_user_mod;
 
 				$this->db->free($resql);
