@@ -51,26 +51,29 @@ class Wish extends CommonObject
 	 * @param 	string 		$typemov	Type of movement (increase to add, decrease to remove)
 	 * @return int			<0 if KO, >0 if OK
 	 */
-    public function create($facture, $points,$typemov='increase')
+    public function create($user, $notrigger = 0)
 	{
 		global $conf,$user;
-        $error = 0;
-		
-		if($typemov==='decrease') $points=$points*-1;
-		
+    $error = 0;
+    
+		$now=dol_now();
+    
+    if (! $this->datec) $this->datec=$now;
+        
 		$this->db->begin();
 		
-		$sql = "INSERT INTO ".MAIN_DB_PREFIX."rewards (";
-		$sql.= "fk_soc, fk_invoice, fk_actioncomm, points, entity, fk_user_author, date";
-		$sql.= ")";
-		$sql.= " VALUES (".$facture->socid;
-		$sql.= ", ".($facture->id?$facture->id:'NULL');
-    $sql.= ", ".($facture->fk_facture_source?$facture->fk_facture_source:'NULL');
-		$sql.= ", ".floor($points*100)/100;
+		$sql = "INSERT INTO ".MAIN_DB_PREFIX."wishlist";
+		$sql.= " (datec, fk_user_author, fk_user_mod, fk_product, fk_soc, qty, target, entity)";
+		$sql.= " VALUES (";
+    $sql.= " '".$this->db->idate($this->datec)."'";
+		$sql.= ", ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
+		$sql.= ", null";    
+		$sql.= ", '".$this->db->escape($this->productid)."'";
+		$sql.= ", '".$this->db->escape($this->socid)."'";
+    $sql.= ", '".$this->db->escape($this->qty)."'";
+    $sql.= ", '".(! empty($this->target) ? "'".$this->db->escape($this->target)."'":"null")."'";
 		$sql.= ", ".$conf->entity;
-		$sql.= ", ".$user->id;
-		$sql.= ", '".$this->db->idate(dol_now());
-		$sql.= "')";
+		$sql.= ")";
 		
 		dol_syslog(get_class($this)."::create::insert sql=".$sql, LOG_DEBUG);
 		if (! $this->db->query($sql) )

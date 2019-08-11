@@ -92,11 +92,11 @@ class Wishlist extends DolibarrApi
         $result = $wish->fetch($id);
         if( ! $result ) {
             throw new RestException(404, 'wish not found');
-            }
+        }
         
         if( ! DolibarrApi::_checkAccessToResource('wishlist', $wish->id)) {
             throw new RestException(401, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
-            }
+        }
 
         return $this->_cleanObjectDatas($wish);
     }   
@@ -183,6 +183,70 @@ class Wishlist extends DolibarrApi
         }
         return $obj_ret;
     }
+ 
+    /**
+     * Create wish object
+     *
+     * @param array $request_data   Request data
+     * @return int  ID of wish
+     */
+    public function post($request_data = null)
+    {
+        if(! DolibarrApiAccess::$user->rights->societe->creer) {
+            throw new RestException(401);
+        }
+        // Check mandatory fields
+        $result = $this->_validate($request_data);
+
+        $wish = new Wish($this->db);
+        foreach($request_data as $field => $value) {
+            $wish->$field = $value;
+        }
+        if ($wish->create(DolibarrApiAccess::$user) < 0) {
+            throw new RestException(500, 'Error creating wish', array_merge(array($wish->error), $wish->errors));
+        }
+        return $member->id;
+    }
+
+    /**
+     * Update wish
+     *
+     * @param int   $id             ID of wish to update
+     * @param array $request_data   Datas
+     * @return int
+     */
+    public function put($id, $request_data = null)
+    {
+        if(! DolibarrApiAccess::$user->rights->societe->creer) {
+            throw new RestException(401);
+        }
+
+        $wish = new Wish($this->db);
+        $result = $wish->fetch($id);
+        if( ! $result ) {
+            throw new RestException(404, 'wish not found');
+        }
+
+        if( ! DolibarrApi::_checkAccessToResource('wishlist', $wish->id)) {
+            throw new RestException(401, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
+        }
+
+        foreach($request_data as $field => $value) {
+            if ($field == 'id') continue;
+                $member->$field = $value;
+        }
+
+        // If there is no error, update() returns the number of affected rows
+        // so if the update is a no op, the return value is zero.
+        if ($wish->update(DolibarrApiAccess::$user) >= 0)
+        {
+            return $this->get($id);
+        }
+        else
+        {
+        	throw new RestException(500, $wish->error);
+        }
+    }
     
     /**
      * Delete wish
@@ -204,7 +268,7 @@ class Wishlist extends DolibarrApi
         
         if( ! DolibarrApi::_checkAccessToResource('wishlist', $wish->id)) {
             throw new RestException(401, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
-            }
+        }
 
         if (! $wish->delete($wish->id, DolibarrApiAccess::$user)) {
             throw new RestException(401,'error when deleting wish');
