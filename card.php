@@ -124,9 +124,12 @@ if (empty($reshook))
 
 		// Insert member
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."wishlist";
-		$sql.= " (fk_product, fk_soc, qty, target, entity)";
+		$sql.= " (datec, fk_user_author, fk_user_mod, fk_product, fk_soc, qty, target, entity)";
 		$sql.= " VALUES (";
-		$sql.= "'".$db->escape(GETPOST('productid', 'alpha'))."'";
+    $sql.= " '".$db->idate(dol_now())."'";
+		$sql.= ", ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
+		$sql.= ", null";    
+		$sql.= ", '".$db->escape(GETPOST('productid', 'alpha'))."'";
 		$sql.= ", '".$db->escape($socid)."'";
     $sql.= ", '".$db->escape(GETPOST('qty', 'int'))."'";
     $sql.= ", '".(!empty(GETPOST('target', 'int'))?$db->escape(GETPOST('target', 'int')):0)."'";
