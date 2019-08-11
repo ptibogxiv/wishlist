@@ -214,8 +214,8 @@ if (empty($reshook))
   
 	if ($user->rights->societe->creer && $action == 'confirm_delete' && GETPOST('confirm', 'alpha') == 'yes')
 	{
-		$result3=$wish->delete($lineid, $user);
-		if ($result3 > 0)
+		$result = $wish->delete($lineid, $user);
+		if ($result > 0)
 		{
 			if (! empty($backtopage))
 			{
@@ -224,7 +224,7 @@ if (empty($reshook))
 			}
 			else
 			{
-				header("Location: list.php");
+				header("Location: card.php?socid=".$socid);
 				exit;
 			}
 		}
