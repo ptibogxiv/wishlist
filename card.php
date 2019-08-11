@@ -71,7 +71,14 @@ $result = restrictedArea($user, 'societe', $socid, '&societe');
 $hookmanager->initHooks(array('wishlistthirdparty'));
 
 $object = new Societe($db);
+$wish = new Wish($db);
 $result = $object->fetch($socid);
+
+if ($lineid > 0)
+{
+	// Load member
+	$result2 = $wish->fetch($id);
+}
   
 /*
  *	Actions
@@ -204,12 +211,27 @@ if (empty($reshook))
 		}
 	}
   
-	if ($action == 'confirm_delete' && GETPOST('confirm', 'alpha') == 'yes')
+	if ($user->rights->societe->creer && $action == 'confirm_delete' && GETPOST('confirm', 'alpha') == 'yes')
 	{
-$db->begin();
-$sql = "DELETE FROM ".MAIN_DB_PREFIX."wishlist WHERE rowid = ".$lineid." AND fk_soc = ".$socid." ";
-$resql = $db->query($sql);
-$db->commit();
+		$result=$object->delete($lineid, $user);
+		if ($result > 0)
+		{
+			if (! empty($backtopage))
+			{
+				header("Location: ".$backtopage);
+				exit;
+			}
+			else
+			{
+				header("Location: list.php");
+				exit;
+			}
+		}
+		else
+		{
+			$errmesg=$object->error;
+		}
+	}
 	}
 }
 
@@ -548,8 +570,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	dol_banner_tab($object, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
 
-  $wishlist = new Wish($db);
-  $wishlist->fetch($lineid);  
+  $wish->fetch($lineid);  
 
 	print '<div class="nofichecenter">';
 
@@ -558,20 +579,20 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans("PredefinedProductsAndServicesToSell").'</td>';
 	  $product_static = new Product($db);
-		$product_static->id = $wishlist->product;
-		$product_static->ref = $wishlist->product_ref;
-    $product_static->label = $wishlist->product_label;
-    $product_static->type = $wishlist->product_type;
+		$product_static->id = $wish->product;
+		$product_static->ref = $wish->product_ref;
+    $product_static->label = $wish->product_label;
+    $product_static->type = $wish->product_type;
 	print '<td>';
-	print $product_static->getNomUrl(1)." - ".$wishlist->product_label;
+	print $product_static->getNomUrl(1)." - ".$wish->product_label;
 	print "</td>";
   print '</td></tr>';
 
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
-	print '<td><input class="minwidth200" type="text" name="qty" value="'.(GETPOST('qty','int')?GETPOST('qty','int'):$wishlist->qty).'"></td></tr>';
+	print '<td><input class="minwidth200" type="text" name="qty" value="'.(GETPOST('qty','int')?GETPOST('qty','int'):$wish->qty).'"></td></tr>';
 
 	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
-	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wishlist->target).'"></td></tr>';
+	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wish->target).'"></td></tr>';
 
 	print '</table>';
 
