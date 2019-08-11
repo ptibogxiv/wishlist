@@ -102,7 +102,7 @@ class Wishlist extends DolibarrApi
     }   
     
     /**
-     * List wishlist
+     * List wishlists
      *
      * Get a list of wishlists
      *
