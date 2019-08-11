@@ -37,9 +37,10 @@ $socid = GETPOST("socid", "int");
 if ($user->societe_id) $socid=$user->societe_id;
 $result = restrictedArea($user, 'societe', '', '');
 
-$rowid  = GETPOST('rowid','int');
-$action = GETPOST('action','alpha');
-$cancel = GETPOST('cancel','alpha');
+$rowid = GETPOST('rowid','int');
+$action = GETPOST('action', 'alpha');
+$cancel = GETPOST('cancel', 'alpha');
+$backtopage = GETPOST('backtopage', 'alpha');
 
 $search_ref	= GETPOST('search_ref','alpha');
 $search_label		= GETPOST('search_label','alpha');
@@ -77,7 +78,7 @@ $result = $object->fetch($socid);
 if ($lineid > 0)
 {
 	// Load member
-	$result2 = $wish->fetch($id);
+	$result2 = $wish->fetch($lineid);
 }
   
 /*
@@ -213,8 +214,8 @@ if (empty($reshook))
   
 	if ($user->rights->societe->creer && $action == 'confirm_delete' && GETPOST('confirm', 'alpha') == 'yes')
 	{
-		$result=$object->delete($lineid, $user);
-		if ($result > 0)
+		$result3=$wish->delete($lineid, $user);
+		if ($result3 > 0)
 		{
 			if (! empty($backtopage))
 			{
@@ -229,9 +230,8 @@ if (empty($reshook))
 		}
 		else
 		{
-			$errmesg=$object->error;
+			$errmesg=$wish->error;
 		}
-	}
 	}
 }
 
