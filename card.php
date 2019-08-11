@@ -184,6 +184,7 @@ if (empty($reshook))
 		$sql = "UPDATE ".MAIN_DB_PREFIX."wishlist";
     $sql.= " SET qty = '".$db->escape(GETPOST('qty', 'int'))."'";
     $sql.= ", target = '".(!empty(GETPOST('target', 'int'))?$db->escape(GETPOST('target', 'int')):0)."'";
+    $sql.= ", fk_user_mod = ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
     $sql.= " WHERE rowid = '".$lineid."'";
 
 		//dol_syslog(get_class($this)."::create", LOG_DEBUG);
