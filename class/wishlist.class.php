@@ -208,4 +208,20 @@ class Wish extends CommonObject
 		}
 	}
   
+    // phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
+	/**
+	 *	Return translated label of Public or Private
+	 *
+	 * 	@param      int			$statut		Type (0 = public, 1 = private)
+	 *  @return     string					Label translated
+	 */
+	public function LibPubPriv($statut)
+	{
+        // phpcs:enable
+		global $langs;
+		if ($statut=='1') return $langs->trans('ContactPrivate');
+		else return $langs->trans('ContactPublic');
+	}
+
+  
 }

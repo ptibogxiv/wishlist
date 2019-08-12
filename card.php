@@ -481,9 +481,11 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
             // Date order
  		        print "<td>".dol_print_date($db->jdate($objp->date_commande), 'day')."</td>";
 
-            // Visibility
- 		        print "<td>".dol_print_date($db->jdate($objp->date_commande), 'day')."</td>";
-            
+            // Visibility   
+        print '<td>';
+        print $wish->LibPubPriv($wish->priv);
+        print '</td>';
+ 
 		        // Actions
 		        print '<td align="center">';
 				if ($user->rights->societe->creer)
