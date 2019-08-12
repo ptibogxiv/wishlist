@@ -483,7 +483,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 
             // Visibility   
         print '<td>';
-        print $wish->LibPubPriv($wish->priv);
+        print $wish->LibPubPriv($objp->priv);
         print '</td>';
  
 		        // Actions
