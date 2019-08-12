@@ -553,7 +553,7 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
 	print '<td><input class="minwidth200" type="text" name="qty" value="'.(GETPOST('qty', 'int')?GETPOST('qty', 'int'):1).'"></td></tr>';
 
-	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
+	print '<tr><td>'.$langs->trans("Target").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.GETPOST('target', 'int').'"></td></tr>';
   
   // Visibility
@@ -607,7 +607,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
 	print '<td><input class="minwidth200" type="text" name="qty" value="'.(GETPOST('qty','int')?GETPOST('qty','int'):$wish->qty).'"></td></tr>';
 
-	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
+	print '<tr><td>'.$langs->trans("Target").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wish->target).'"></td></tr>';
   
   // Visibility
