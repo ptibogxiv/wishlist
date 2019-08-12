@@ -310,7 +310,10 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
     $sql.= ", (SELECT d.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as lastqty";
-    $sql.= ", (SELECT sum(d.qty) FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." AND date_commande >= '".$date_start."' ORDER BY c.date_commande DESC) as totalqty";
+    
+    if (! empty($conf->global->WISH_TARGET_BYORDER)) { $sql.= ", (SELECT sum(d.qty) FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." AND date_commande >= '".$date_start."' ORDER BY c.date_commande DESC) as totalqty"; } 
+    else { $sql.= ", (SELECT sum(fd.qty) FROM ".MAIN_DB_PREFIX."facturedet AS fd LEFT JOIN ".MAIN_DB_PREFIX."facture AS f ON f.rowid=fd.fk_facture WHERE fd.fk_product = t.fk_product AND f.fk_soc = ".$socid." AND f.datec >= '".$date_start."' ORDER BY f.datec DESC) as totalqty"; }
+    
     $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
     $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
 		$sql.= " WHERE t.entity IN (".getEntity('societe').") ";
