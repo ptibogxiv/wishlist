@@ -106,29 +106,39 @@ class Wishlist extends DolibarrApi
      *
      * Get a list of wishlists
      *
-     * @param int	$thirdparty	Thirdparty
-     * @param string	$sortfield	Sort field
-     * @param string	$sortorder	Sort order
-     * @param int		$limit		Limit for list
-     * @param int		$page		Page number
-     * @return array                Array of session objects
-     *
-     * @throws RestException
-     */
-    public function index($thirdparty = null, $sortfield = "", $sortorder = 'DESC', $limit = 100, $page = 0) {
+
+	 * @param string	$sortfield	        Sort field
+	 * @param string	$sortorder	        Sort order
+	 * @param int		$limit		        Limit for list
+	 * @param int		$page		        Page number
+	 * @param string   	$thirdparty_ids	Thirdparty ids to filter wishlists of.
+	 * @param string    $sqlfilters         Other criteria to filter answers separated by a comma. Syntax example "(t.ref:like:'SO-%') and (t.datec:<:'20160101')" 
+	 * @return array                Array of session objects
+	 * 
+	 *@throws RestException
+	 */
+    public function index($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0, $thirdparty_ids = '', $sqlfilters = '') {
         global $db, $conf;
 
         $obj_ret = array();
 
-        $socid = DolibarrApiAccess::$user->societe_id ? DolibarrApiAccess::$user->societe_id : '';
+		// case of external user, $thirdparty_ids param is ignored and replaced by user's socid
+		$socids = DolibarrApiAccess::$user->societe_id ? DolibarrApiAccess::$user->societe_id : $thirdparty_ids;
+    
+		// If the internal user must only see his customers, force searching by him
+		$search_sale = 0;
+		if (! DolibarrApiAccess::$user->rights->societe->client->voir && !$socids) $search_sale = DolibarrApiAccess::$user->id;
 
-        $sql = "SELECT t.rowid, t.fk_product, t.qty, t.target";
+        $sql = "SELECT t.rowid,";
+		if ((!DolibarrApiAccess::$user->rights->societe->client->voir && !$socids) || $search_sale > 0) $sql .= ", sc.fk_soc, sc.fk_user"; // We need these fields in order to filter by sale (including the case where the user can only see his prospects)
+        $sql.= " t.fk_product, t.qty, t.target";
         $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
         if ($category > 0) {
             $sql.= ", ".MAIN_DB_PREFIX."categorie_product as c";
         }
         $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
         $sql.= ' WHERE t.entity IN ('.getEntity('societe').')';
+        if ($socids) $sql.= " AND t.fk_soc IN (".$socids.")";
         // Select products of given category
         if ($category > 0) {
             $sql.= " AND c.fk_categorie = ".$db->escape($category);
@@ -179,7 +189,7 @@ class Wishlist extends DolibarrApi
             throw new RestException(503, 'Error when retrieve wish list : '.$db->lasterror());
         }
         if(! count($obj_ret)) {
-            throw new RestException(404, 'No product found');
+            throw new RestException(404, 'No wish found');
         }
         return $obj_ret;
     }
