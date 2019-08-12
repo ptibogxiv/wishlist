@@ -305,7 +305,7 @@ if ($month_end < 1) $month_end=12;
 $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false), '%Y-%m-%d'); 
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
-		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target";
+		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target, t.priv";
     $sql.= ", p.label, p.ref as ref, p.fk_product_type as type";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
@@ -406,6 +406,8 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
       print '<td align="center" class="liste_titre"></td>';
 			print '<td align="center" class="liste_titre" colspan="3">'.$langs->trans("LastOrder").'</td>';
 
+			print '<td align="center" class="liste_titre"></td>';
+      
 			print '<td align="right"  class="liste_titre">';
 			print '<input type="image" class="liste_titre" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/search.png" name="button_search" value="'.dol_escape_htmltag($langs->trans("Search")).'" title="'.dol_escape_htmltag($langs->trans("Search")).'">';
 		  print '&nbsp; ';
@@ -422,6 +424,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		    print_liste_field_titre("Ref",$_SERVER["PHP_SELF"],"orderid",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("Qty",$_SERVER["PHP_SELF"],"lastqty",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("OrderDateShort",$_SERVER["PHP_SELF"],"date_commande",$param,"","",$sortfield,$sortorder);
+		    print_liste_field_titre("ContactVisibility",$_SERVER["PHP_SELF"],"",$param,"",'width="40" align="center"',$sortfield,$sortorder);
 		    print_liste_field_titre("Action",$_SERVER["PHP_SELF"],"",$param,"",'width="90" align="center"',$sortfield,$sortorder);
 		    print "</tr>\n";
 
@@ -478,6 +481,9 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
             // Date order
  		        print "<td>".dol_print_date($db->jdate($objp->date_commande), 'day')."</td>";
 
+            // Visibility
+ 		        print "<td>".dol_print_date($db->jdate($objp->date_commande), 'day')."</td>";
+            
 		        // Actions
 		        print '<td align="center">';
 				if ($user->rights->societe->creer)
