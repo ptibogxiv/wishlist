@@ -36,6 +36,8 @@ class Wish extends CommonObject
   
   public $date_creation;
   public $date_modification;
+  
+	public $priv;
 
   public $user_author_id;
   public $user_modification;
@@ -69,7 +71,7 @@ class Wish extends CommonObject
 		$this->db->begin();
 		
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."wishlist";
-		$sql.= " (datec, fk_user_author, fk_user_mod, fk_product, fk_soc, qty, target, entity)";
+		$sql.= " (datec, fk_user_author, fk_user_mod, fk_product, fk_soc, qty, target, priv, entity)";
 		$sql.= " VALUES (";
     $sql.= " '".$this->db->idate($this->datec)."'";
 		$sql.= ", ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
@@ -78,6 +80,7 @@ class Wish extends CommonObject
 		$sql.= ", '".$this->db->escape($this->fk_soc)."'";
     $sql.= ", '".$this->db->escape($this->qty)."'";
     $sql.= ", '".(! empty($this->target) ? $this->db->escape($this->target) : "0")."'";
+    $sql.= ", '".$this->db->escape($this->priv)."'";
 		$sql.= ", ".$conf->entity;
 		$sql.= ")";
 		
@@ -119,7 +122,7 @@ class Wish extends CommonObject
 	 */
 	public function fetch($id)
 	{
-		$sql = 'SELECT t.rowid, t.datec, t.tms as datem, t.fk_user_author, t.fk_user_mod, t.fk_soc, t.fk_product as product, t.qty as qty, t.target as target';
+		$sql = 'SELECT t.rowid, t.datec, t.tms as datem, t.fk_user_author, t.fk_user_mod, t.fk_soc, t.fk_product as product, t.qty as qty, t.target as target, t.priv';
     $sql.= ', p.label, p.ref as ref, p.fk_product_type as type';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'wishlist as t LEFT JOIN '.MAIN_DB_PREFIX.'product as p ON p.rowid = t.fk_product';
 		$sql.= ' WHERE t.entity IN (' . getEntity('product').')';
@@ -139,6 +142,7 @@ class Wish extends CommonObject
         $this->fk_type        = $obj->type;
         $this->qty            = $obj->qty;
         $this->target         = $obj->target;
+        $this->priv           = $obj->priv;
         $this->date_creation  = $this->db->jdate($obj->datec);
         $this->date_modification = $this->db->jdate($obj->datem);
         $this->user_author_id    = $obj->fk_user_author;

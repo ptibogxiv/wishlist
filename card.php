@@ -129,7 +129,8 @@ if (empty($reshook))
 			$wish->qty            = GETPOST('qty', 'int');
 			$wish->target         = GETPOST('target', 'int');
 			$wish->entity         = $conf->entity;
-
+			$wish->priv           = GETPOST('priv', 'int');
+      
 			$db->begin();
 
 			if (! $error)
@@ -177,6 +178,7 @@ if (empty($reshook))
 		$sql = "UPDATE ".MAIN_DB_PREFIX."wishlist";
     $sql.= " SET qty = '".$db->escape(GETPOST('qty', 'int'))."'";
     $sql.= ", target = '".(!empty(GETPOST('target', 'int'))?$db->escape(GETPOST('target', 'int')):0)."'";
+    $sql.= ", priv = '".$db->escape(GETPOST('priv', 'int'))."'";
     $sql.= ", fk_user_mod = ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
     $sql.= " WHERE rowid = '".$lineid."'";
 
@@ -542,6 +544,12 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 
 	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.GETPOST('target', 'int').'"></td></tr>';
+  
+  // Visibility
+  print '<tr><td><label for="priv">'.$langs->trans("ContactVisibility").'</label></td><td colspan="3">';
+  $selectarray=array('0'=>$langs->trans("ContactPublic"),'1'=>$langs->trans("ContactPrivate"));
+  print $form->selectarray('priv', $selectarray, $wish->priv, 0);
+  print '</td></tr>';
 
 	print '</table>';
 
@@ -590,6 +598,12 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	print '<tr><td>'.$langs->trans("AnnualTarget").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wish->target).'"></td></tr>';
+  
+  // Visibility
+  print '<tr><td><label for="priv">'.$langs->trans("ContactVisibility").'</label></td><td colspan="3">';
+  $selectarray=array('0'=>$langs->trans("ContactPublic"),'1'=>$langs->trans("ContactPrivate"));
+  print $form->selectarray('priv', $selectarray, $wish->priv, 0);
+  print '</td></tr>';
 
 	print '</table>';
 
