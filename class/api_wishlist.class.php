@@ -270,7 +270,7 @@ class Wishlist extends DolibarrApi
     /**
      * Delete wish
      *
-     * @param int $id   entity ID
+     * @param int $id   Wish ID
      * @return array
      */
     public function delete($id)
