@@ -77,12 +77,15 @@ class Wishlist extends DolibarrApi
      *
      * Return an array with wish informations
      *
-     * @param     int     $id ID of wish
-     * @return    array|mixed data without useless information
+     * @param  int    $id               ID of wish
+     * @param  int    $includestockdata Load also information about stock (slower)
+     * @return array|mixed                 Data without useless information
      *
-     * @throws    RestException
+     * @throws 401
+     * @throws 403
+     * @throws 404
      */
-    public function get($id)
+    public function get($id, $includestockdata = 0)
     {
         if(! DolibarrApiAccess::$user->rights->societe->lire) {
             throw new RestException(401);
@@ -96,6 +99,10 @@ class Wishlist extends DolibarrApi
         
         if( ! DolibarrApi::_checkAccessToResource('wishlist', $wish->id)) {
             throw new RestException(401, 'Access not allowed for login '.DolibarrApiAccess::$user->login);
+        }
+        
+                if ($includestockdata) {
+               $this->product->load_stock();
         }
 
         return $this->_cleanObjectDatas($wish);
