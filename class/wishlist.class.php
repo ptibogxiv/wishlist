@@ -77,7 +77,7 @@ class Wish extends CommonObject
 		$sql.= ", '".$this->db->escape($this->fk_product)."'";
 		$sql.= ", '".$this->db->escape($this->fk_soc)."'";
     $sql.= ", '".$this->db->escape($this->qty)."'";
-    $sql.= ", '".(! empty($this->target) ? "'".$this->db->escape($this->target)."'":"0")."'";
+    $sql.= ", '".(! empty($this->target) ? $this->db->escape($this->target) : "0")."'";
 		$sql.= ", ".$conf->entity;
 		$sql.= ")";
 		
