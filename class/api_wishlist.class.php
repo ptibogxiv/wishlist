@@ -147,32 +147,38 @@ class Wishlist extends DolibarrApi
             // Show only services
             $sql.= " AND t.fk_product_type = 1";
         }
-        // Add sql filters
-        if ($sqlfilters) {
-            if (! DolibarrApi::_checkFilters($sqlfilters)) {
-                throw new RestException(503, 'Error when validating parameter sqlfilters '.$sqlfilters);
-            }
-            $regexstring='\(([^:\'\(\)]+:[^:\'\(\)]+:[^:\(\)]+)\)';
-            $sql.=" AND (".preg_replace_callback('/'.$regexstring.'/', 'DolibarrApi::_forge_criteria_callback', $sqlfilters).")";
-        }
+		// Add sql filters
+		if ($sqlfilters)
+		{
+			if (! DolibarrApi::_checkFilters($sqlfilters))
+			{
+				throw new RestException(503, 'Error when validating parameter sqlfilters '.$sqlfilters);
+			}
+			$regexstring='\(([^:\'\(\)]+:[^:\'\(\)]+:[^:\(\)]+)\)';
+			$sql.=" AND (".preg_replace_callback('/'.$regexstring.'/', 'DolibarrApi::_forge_criteria_callback', $sqlfilters).")";
+		}
 
-        $sql.= $db->order($sortfield, $sortorder);
-        if ($limit) {
-            if ($page < 0) {
-                $page = 0;
-            }
-            $offset = $limit * $page;
+		$sql.= $db->order($sortfield, $sortorder);
+		if ($limit)	{
+			if ($page < 0)
+			{
+				$page = 0;
+			}
+			$offset = $limit * $page;
 
-            $sql.= $db->plimit($limit + 1, $offset);
-        }
+			$sql.= $db->plimit($limit + 1, $offset);
+		}
 
-        $result = $db->query($sql);
-        if ($result) {
-            $num = $db->num_rows($result);
-            $min = min($num, ($limit <= 0 ? $num : $limit));
-            $i = 0;
-            while ($i < $min)
-            {
+        dol_syslog("API Rest request");
+		$result = $db->query($sql);
+
+		if ($result)
+		{
+			$num = $db->num_rows($result);
+			$min = min($num, ($limit <= 0 ? $num : $limit));
+			$i = 0;
+			while ($i < $min)
+			{
                 $obj = $db->fetch_object($result);
                 $wish_static = new Wish($db);
                 if($wish_static->fetch($obj->rowid)) {
