@@ -46,7 +46,7 @@ $search_ref	= GETPOST('search_ref','alpha');
 $search_label		= GETPOST('search_label','alpha');
 $search_qty		= GETPOST('search_qty','int');
 $type				= GETPOST('type','alpha');
-$status				= GETPOST('status','alpha');
+$priv				= GETPOST('priv','priv');
 
 $limit = GETPOST('limit','int')?GETPOST('limit','int'):$conf->liste_limit;
 $sortfield = GETPOST("sortfield",'alpha');
@@ -427,7 +427,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		    print_liste_field_titre("Ref",$_SERVER["PHP_SELF"],"orderid",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("Qty",$_SERVER["PHP_SELF"],"lastqty",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("OrderDateShort",$_SERVER["PHP_SELF"],"date_commande",$param,"","",$sortfield,$sortorder);
-		    print_liste_field_titre("ContactVisibility",$_SERVER["PHP_SELF"],"",$param,"",'width="40" align="center"',$sortfield,$sortorder);
+		    print_liste_field_titre("ContactVisibility",$_SERVER["PHP_SELF"],"t.priv",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("Action",$_SERVER["PHP_SELF"],"",$param,"",'width="90" align="center"',$sortfield,$sortorder);
 		    print "</tr>\n";
 
