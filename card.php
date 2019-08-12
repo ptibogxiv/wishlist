@@ -557,7 +557,7 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 	print '<td><input class="minwidth200" type="text" name="target" value="'.GETPOST('target', 'int').'"></td></tr>';
   
   // Visibility
-  print '<tr><td><label for="priv">'.$langs->trans("ContactVisibility").'</label></td><td colspan="3">';
+  print '<tr><td class="fieldrequired"><label for="priv">'.$langs->trans("ContactVisibility").'</label></td><td colspan="3">';
   $selectarray=array('0'=>$langs->trans("ContactPublic"),'1'=>$langs->trans("ContactPrivate"));
   print $form->selectarray('priv', $selectarray, $wish->priv, 0);
   print '</td></tr>';
@@ -611,7 +611,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wish->target).'"></td></tr>';
   
   // Visibility
-  print '<tr><td><label for="priv">'.$langs->trans("ContactVisibility").'</label></td><td colspan="3">';
+  print '<tr><td class="fieldrequired"><label for="priv">'.$langs->trans("ContactVisibility").'</label></td><td colspan="3">';
   $selectarray=array('0'=>$langs->trans("ContactPublic"),'1'=>$langs->trans("ContactPrivate"));
   print $form->selectarray('priv', $selectarray, $wish->priv, 0);
   print '</td></tr>';
