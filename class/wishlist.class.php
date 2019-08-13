@@ -117,16 +117,22 @@ class Wish extends CommonObject
 	/**
 	 *    Load wish from database
 	 *
-	 *    @param	int		$id			Id of wish to get
-	 *    @return   int		            <0 if KO, 0 if not found, >0 if OK
+	 *	@param	int		$rowid      			Id of object to load
+	 * 	@param	string	$fk_product					To load wish from its products
+	 * 	@param	int		$fk_soc					To load member from its link to third party
+	 *  @return   int		            <0 if KO, 0 if not found, >0 if OK
 	 */
-	public function fetch($id)
+	public function fetch($rowid, $fk_product = '', $fk_soc = '')
 	{
 		$sql = 'SELECT t.rowid, t.datec, t.tms as datem, t.fk_user_author, t.fk_user_mod, t.fk_soc, t.fk_product as product, t.qty as qty, t.target as target, t.priv';
     $sql.= ', p.label, p.ref as ref, p.fk_product_type as type';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'wishlist as t LEFT JOIN '.MAIN_DB_PREFIX.'product as p ON p.rowid = t.fk_product';
 		$sql.= ' WHERE t.entity IN (' . getEntity('product').')';
-		$sql.= ' AND t.rowid = '.$id;    
+    if ($ref && $fk_soc) {
+		$sql.= " AND t.fk_product='".$fk_product."' AND t.fk_soc=".$fk_soc;
+		} elseif ($rowid) {
+    $sql.= " AND t.rowid=".$rowid;
+    }  
 
 		$resql = $this->db->query($sql);
 		if ($resql)
