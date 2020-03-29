@@ -61,7 +61,7 @@ if (! $sortorder) {  $sortorder="DESC"; }
 
 $label=GETPOST("label","alpha");
 $description=GETPOST("description","alpha");
-$qty=GETPOST("qty","int");
+$quantity=GETPOST("quantity","int");
 $lineid=GETPOST("lineid","int");
 $target=GETPOST("target","int");
 
@@ -110,10 +110,10 @@ if (empty($reshook))
 	{
 		$error=0;
 
-		if (! GETPOST('productid', 'int') || ! GETPOST('qty', 'int'))
+		if (! GETPOST('productid', 'int') || ! GETPOST('quantity', 'int'))
 		{
 			if (! GETPOST('productid', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ProductOrService")), null, 'errors');
-			if (! GETPOST('qty', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Qty")), null, 'errors');
+			if (! GETPOST('quantity', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Qty")), null, 'errors');
 			$action='create';
 			$error++;
 		}
@@ -126,7 +126,7 @@ if (empty($reshook))
 
 			$wish->fk_product     = GETPOST('productid', 'int');
 			$wish->fk_soc         = $socid;
-			$wish->qty            = GETPOST('qty', 'int');
+			$wish->quantity       = GETPOST('quantity', 'int');
 			$wish->target         = GETPOST('target', 'int');
 			$wish->entity         = $conf->entity;
 			$wish->priv           = GETPOST('priv', 'int');
@@ -163,9 +163,9 @@ if (empty($reshook))
 	{
 		$error=0;
 
-		if (! GETPOST('qty', 'int'))
+		if (! GETPOST('quantity', 'int'))
 		{
-			if (! GETPOST('qty', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Qty")), null, 'errors');
+			if (! GETPOST('quantity', 'int')) setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("Qty")), null, 'errors');
 			$action='edit';
 			$error++;
 		}
@@ -176,7 +176,7 @@ if (empty($reshook))
 
 		// Insert member
 		$sql = "UPDATE ".MAIN_DB_PREFIX."wishlist";
-    $sql.= " SET qty = '".$db->escape(GETPOST('qty', 'int'))."'";
+    $sql.= " SET qty = '".$db->escape(GETPOST('quantity', 'int'))."'";
     $sql.= ", target = '".(!empty(GETPOST('target', 'int'))?$db->escape(GETPOST('target', 'int')):0)."'";
     $sql.= ", priv = '".$db->escape(GETPOST('priv', 'int'))."'";
     $sql.= ", fk_user_mod = ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
@@ -305,7 +305,7 @@ if ($month_end < 1) $month_end=12;
 $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false), '%Y-%m-%d'); 
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
-		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as qty, t.target as target, t.priv";
+		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as quantity, t.target as target, t.priv";
     $sql.= ", p.label, p.ref as ref, p.fk_product_type as type";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
@@ -452,7 +452,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		        print '<td class="tdoverflowmax200">'.dol_trunc($objp->label, 80).'</td>';
 
 		        // Qty
-            $quantity= GETPOSTISSET('quantity')?GETPOST('quantity'):$objp->qty;
+            $quantity= GETPOSTISSET('quantity')?GETPOST('quantity'):$objp->quantity;
  		        print "<td><input type='text' name='quantity' value='".$quantity."' size='5'></td>";
              
 		        // Target
@@ -605,7 +605,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
   print '</td></tr>';
 
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
-	print '<td><input class="minwidth200" type="text" name="qty" value="'.(GETPOST('qty','int')?GETPOST('qty','int'):$wish->qty).'"></td></tr>';
+	print '<td><input class="minwidth200" type="text" name="quantity" value="'.(GETPOST('quantity','int')?GETPOST('quantity','int'):$wish->quantity).'"></td></tr>';
 
 	print '<tr><td>'.$langs->trans("Target").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wish->target).'"></td></tr>';
