@@ -101,14 +101,14 @@ class modWishlist extends DolibarrModules {
         $r = 0;
         $this->rights_class = 'wishlist';
         $r++;
-        $this->rights[$r][0] = 4000811;
+        $this->rights[$r][0] = 431335;
         $this->rights[$r][1] = 'Lire les souhaits';
         $this->rights[$r][2] = 'a';
         $this->rights[$r][3] = 1;
         $this->rights[$r][4] = 'lire';
 
         $r++;
-        $this->rights[$r][0] = 4000812;
+        $this->rights[$r][0] = 431336;
         $this->rights[$r][1] = 'Creer les souhaits';
         $this->rights[$r][2] = 'a';
         $this->rights[$r][3] = 1;
