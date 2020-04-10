@@ -1,0 +1,8 @@
+# Dolibarr language file - fr_FR - tos
+# Admin form
+CHARSET=UTF-8
+
+Module432460Desc=Module permettant d'attacher automatiquement vos CGV aux documents PDF (factures, devis, commandes)
+Module432460Name=Conditions générales de vente
+Wishlist=Liste de souhaits
+WishlistShort=Souhaits
