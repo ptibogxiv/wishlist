@@ -384,9 +384,9 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
       print_barre_liste('',$page,$_SERVER["PHP_SELF"],$param,$sortfield,$sortorder,'',$num,$nbtotalofrecords);
 
       if ((float) DOL_VERSION < 10) {
-	$morehtmlright='<a class="butActionNew" href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create">'.$langs->trans("Add").' <span class="fa fa-plus-circle valignmiddle"></span></a>';
+	$morehtmlright='<a class="butActionNew" href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create">'.$langs->trans("AddAWish").' <span class="fa fa-plus-circle valignmiddle"></span></a>';
       } else {
-  $morehtmlright= dolGetButtonTitle($langs->trans('Add'), '', 'fa fa-plus-circle', $_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create');
+  $morehtmlright= dolGetButtonTitle($langs->trans('AddAWish'), '', 'fa fa-plus-circle', $_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create');
       }
 
       print load_fiche_titre($langs->trans("ListOfProductsServices"), $morehtmlright, '');
