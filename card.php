@@ -306,7 +306,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
 		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as quantity, t.target as target, t.priv";
-    $sql.= ", p.label, p.ref as ref, p.fk_product_type as type";
+    $sql.= ", p.rowid, p.label, p.price, p.ref, p.fk_product_type, p.tosell, p.tobuy, p.tobatch, p.fk_price_expression";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
     $sql.= ", (SELECT d.qty FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as lastqty";
@@ -438,18 +438,39 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
         $datefin=$db->jdate($objp->datefin);
 
 	      $product_static = new Product($db);
-		    $product_static->id = $objp->product;
-		    $product_static->ref = $objp->ref;
-        $product_static->label = $objp->label;
-        $product_static->type = $objp->type;
+				$product_static->id = $objp->rowid;
+				$product_static->ref = $objp->ref;
+				$product_static->label = $objp->label;
+				$product_static->type = $objp->fk_product_type;
+				$product_static->entity = $objp->entity;
+				$product_static->status = $objp->tosell;
+				$product_static->status_buy = $objp->tobuy;
+				$product_static->status_batch = $objp->tobatch;
+        
+				//Multilangs
+				if (!empty($conf->global->MAIN_MULTILANGS))
+				{
+					$sql = "SELECT label";
+					$sql .= " FROM ".MAIN_DB_PREFIX."product_lang";
+					$sql .= " WHERE fk_product=".$objp->rowid;
+					$sql .= " AND lang='".$langs->getDefaultLang()."'";
+
+					$resultd = $db->query($sql);
+					if ($resultd)
+					{
+						$objtp = $db->fetch_object($resultd);
+						if ($objtp && $objtp->label != '') $objp->label = $objtp->label;
+					}
+				}
+        
 		        // Product/service
 		  print '<tr class="oddeven">';
 			print '<td class="tdoverflowmax200">';
-			print $product_static->getNomUrl(1);
+			print $product_static->getNomUrl(1, '', 16);
 			print "</td>";
 
 		        // Description
-		        print '<td class="tdoverflowmax200">'.dol_trunc($objp->label, 80).'</td>';
+		        print '<td class="tdoverflowmax200">'.dol_trunc($objp->label, 32).'</td>';
 
 		        // Qty
             $quantity= GETPOSTISSET('quantity')?GETPOST('quantity'):$objp->quantity;
