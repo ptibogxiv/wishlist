@@ -316,7 +316,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
     
     $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
     $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
-		$sql.= " WHERE t.entity IN (".getEntity('product').") ";
+		$sql.= " WHERE p.entity IN (".getEntity('product').") ";
 		$sql.= " AND t.fk_soc = ".$socid;
 		if ($sall)
 		{

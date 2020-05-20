@@ -140,7 +140,7 @@ class Wishlist extends DolibarrApi
             $sql.= ", ".MAIN_DB_PREFIX."categorie_product as c";
         }
         $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
-        $sql.= ' WHERE t.entity IN ('.getEntity('societe').')';
+        $sql.= ' WHERE p.entity IN ('.getEntity('product').')';
         if ($socids) $sql.= " AND t.fk_soc IN (".$socids.")";
         // Select products of given category
         if ($category > 0) {
