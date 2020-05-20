@@ -126,7 +126,7 @@ if (empty($reshook))
 
 			$wish->fk_product     = GETPOST('productid', 'int');
 			$wish->fk_soc         = $socid;
-			$wish->quantity       = GETPOST('quantity', 'int');
+			$wish->qty            = GETPOST('quantity', 'int');
 			$wish->target         = GETPOST('target', 'int');
 			$wish->entity         = $conf->entity;
 			$wish->priv           = GETPOST('priv', 'int');
@@ -305,7 +305,7 @@ if ($month_end < 1) $month_end=12;
 $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false), '%Y-%m-%d'); 
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
-		$sql = "SELECT t.rowid, t.fk_product as product, t.qty as quantity, t.target as target, t.priv";
+		$sql = "SELECT t.rowid as id, t.fk_product as product, t.qty as qty, t.target as target, t.priv";
     $sql.= ", p.rowid, p.label, p.price, p.ref, p.fk_product_type, p.tosell, p.tobuy, p.tobatch, p.fk_price_expression";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
@@ -473,7 +473,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		        print '<td class="tdoverflowmax200">'.dol_trunc($objp->label, 32).'</td>';
 
 		        // Qty
-            $quantity= GETPOSTISSET('quantity')?GETPOST('quantity'):$objp->quantity;
+            $quantity= GETPOSTISSET('quantity')?GETPOST('quantity'):$objp->qty;
  		        print "<td><input type='text' name='quantity' value='".$quantity."' size='5'></td>";
              
 		        // Target
@@ -514,13 +514,13 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		        print '<td align="center">';
 				if ($user->rights->societe->creer)
         {
-				print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->rowid.'&action=edit">';
+				print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->id.'&action=edit">';
 				print img_picto($langs->trans("Modify"), 'edit');
 				print '</a>';
 
 		   	print '&nbsp;';
 
-		   	print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->rowid.'&action=delete">';
+		   	print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->id.'&action=delete">';
 		   	print img_picto($langs->trans("Delete"), 'delete');
 		   	print '</a>';
 		    }
@@ -607,7 +607,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	dol_banner_tab($object, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
 
-  $wish->fetch($lineid);  
+  print $wish->fetch($lineid);  
 
 	print '<div class="nofichecenter">';
 
@@ -616,7 +616,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	print '<tr><td class="titlefieldcreate fieldrequired">'.$langs->trans("PredefinedProductsAndServicesToSell").'</td>';
 	  $product_static = new Product($db);
-		$product_static->id = $wish->product;
+		$product_static->id = $wish->fk_product;
 		$product_static->ref = $wish->ref;
     $product_static->label = $wish->label;
     $product_static->type = $wish->fk_type;
@@ -626,7 +626,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
   print '</td></tr>';
 
 	print '<tr><td class="fieldrequired">'.$langs->trans("Qty").'</td>';
-	print '<td><input class="minwidth200" type="text" name="quantity" value="'.(GETPOST('quantity','int')?GETPOST('quantity','int'):$wish->quantity).'"></td></tr>';
+	print '<td><input class="minwidth200" type="text" name="quantity" value="'.(GETPOST('quantity','int')?GETPOST('quantity','int'):$wish->qty).'"></td></tr>';
 
 	print '<tr><td>'.$langs->trans("Target").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wish->target).'"></td></tr>';
