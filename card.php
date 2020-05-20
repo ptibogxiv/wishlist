@@ -64,6 +64,7 @@ $description=GETPOST("description","alpha");
 $quantity=GETPOST("quantity","int");
 $lineid=GETPOST("lineid","int");
 $target=GETPOST("target","int");
+$rank=GETPOST("rank","int");
 
 if ($user->societe_id) $socid=$user->societe_id;
 $result = restrictedArea($user, 'societe', $socid, '&societe');
@@ -130,7 +131,7 @@ if (empty($reshook))
 			$wish->target         = GETPOST('target', 'int');
 			$wish->entity         = $conf->entity;
 			$wish->priv           = GETPOST('priv', 'int');
-      
+			$wish->rang           = GETPOST('rank', 'int');
 			$db->begin();
 
 			if (! $error)
@@ -180,6 +181,7 @@ if (empty($reshook))
     $sql.= ", target = '".(!empty(GETPOST('target', 'int'))?$db->escape(GETPOST('target', 'int')):0)."'";
     $sql.= ", priv = '".$db->escape(GETPOST('priv', 'int'))."'";
     $sql.= ", fk_user_mod = ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
+    $sql.= ", rang = '".(!empty(GETPOST('rank', 'int'))?$db->escape(GETPOST('rank', 'int')):0)."'";
     $sql.= " WHERE rowid = '".$lineid."'";
 
 		//dol_syslog(get_class($this)."::create", LOG_DEBUG);
@@ -305,7 +307,7 @@ if ($month_end < 1) $month_end=12;
 $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false), '%Y-%m-%d'); 
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
-		$sql = "SELECT t.rowid as id, t.fk_product as product, t.qty as qty, t.target as target, t.priv";
+		$sql = "SELECT t.rowid as id, t.fk_product as product, t.qty as qty, t.target as target, t.priv, t.rang as rang";
     $sql.= ", p.rowid, p.label, p.price, p.ref, p.fk_product_type, p.tosell, p.tobuy, p.tobatch, p.fk_price_expression";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
@@ -397,6 +399,8 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 			// Lignes des champs de filtre
 			print '<tr class="liste_titre_filter">';
 
+			print '<td class="liste_titre" align="left"></td>';
+
 			print '<td class="liste_titre" align="left">';
 			print '<input class="flat" type="text" name="search_ref" value="'.dol_escape_htmltag($search_ref).'" size="7"></td>';
 
@@ -420,15 +424,17 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 			print "</tr>";
 
 			print '<tr class="liste_titre">';
-		    print_liste_field_titre( $langs->trans("Ref"),$_SERVER["PHP_SELF"],"p.ref",$param,"","",$sortfield,$sortorder);
-		    print_liste_field_titre("Label",$_SERVER["PHP_SELF"],"p.label",$param,"","",$sortfield,$sortorder);
-		    print_liste_field_titre("Wish",$_SERVER["PHP_SELF"],"t.qty",$param,"","",$sortfield,$sortorder);
-        print_liste_field_titre("Target",$_SERVER["PHP_SELF"],"t.target",$param,"","",$sortfield,$sortorder);
-		    print_liste_field_titre("Ref",$_SERVER["PHP_SELF"],"orderid",$param,"","",$sortfield,$sortorder);
+
+		    print_liste_field_titre($langs->trans("Rank"),$_SERVER["PHP_SELF"],"t.rang",$param,"","",$sortfield,$sortorder);
+		    print_liste_field_titre($langs->trans("Ref"),$_SERVER["PHP_SELF"],"p.ref",$param,"","",$sortfield,$sortorder);
+		    print_liste_field_titre($langs->trans("label"),$_SERVER["PHP_SELF"],"p.label",$param,"","",$sortfield,$sortorder);
+		    print_liste_field_titre($langs->trans("Wish"),$_SERVER["PHP_SELF"],"t.qty",$param,"","",$sortfield,$sortorder);
+        print_liste_field_titre($langs->trans("Target"),$_SERVER["PHP_SELF"],"t.target",$param,"","",$sortfield,$sortorder);
+		    print_liste_field_titre($langs->trans("Ref"),$_SERVER["PHP_SELF"],"orderid",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("Qty",$_SERVER["PHP_SELF"],"lastqty",$param,"","",$sortfield,$sortorder);
         print_liste_field_titre("OrderDateShort",$_SERVER["PHP_SELF"],"date_commande",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("ContactVisibility",$_SERVER["PHP_SELF"],"t.priv",$param,"","",$sortfield,$sortorder);
-		    print_liste_field_titre("Action",$_SERVER["PHP_SELF"],"",$param,"",'width="90" align="center"',$sortfield,$sortorder);
+		    print_liste_field_titre($langs->trans("Action"),$_SERVER["PHP_SELF"],"",$param,"",'width="90" align="center"',$sortfield,$sortorder);
 		    print "</tr>\n";
 
 		    while ($i < $num && $i < $conf->liste_limit)
@@ -465,6 +471,11 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
         
 		        // Product/service
 		  print '<tr class="oddeven">';
+      
+			print '<td>';
+			print $objp->rang;
+			print "</td>";  
+      
 			print '<td class="tdoverflowmax200">';
 			print $product_static->getNomUrl(1, '', 16);
 			print "</td>";
@@ -576,7 +587,10 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 
 	print '<tr><td>'.$langs->trans("Target").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.GETPOST('target', 'int').'"></td></tr>';
-  
+
+	print '<tr><td>'.$langs->trans("Rank").'</td>';
+	print '<td><input class="minwidth200" type="text" name="rank" value="'.(GETPOST('rank','int')?GETPOST('rank','int'):$wish->rang).'"></td></tr>';
+
   // Visibility
   print '<tr><td class="fieldrequired"><label for="priv">'.$langs->trans("ContactVisibility").'</label></td><td colspan="3">';
   $selectarray=array('0'=>$langs->trans("ContactPublic"),'1'=>$langs->trans("ContactPrivate"));
@@ -607,7 +621,7 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	dol_banner_tab($object, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
 
-  print $wish->fetch($lineid);  
+  $wish->fetch($lineid);  
 
 	print '<div class="nofichecenter">';
 
@@ -630,6 +644,9 @@ if ($socid && $action == 'edit' && $user->rights->societe->creer)
 
 	print '<tr><td>'.$langs->trans("Target").'</td>';
 	print '<td><input class="minwidth200" type="text" name="target" value="'.(GETPOST('target','int')?GETPOST('target','int'):$wish->target).'"></td></tr>';
+  
+	print '<tr><td>'.$langs->trans("Rank").'</td>';
+	print '<td><input class="minwidth200" type="text" name="rank" value="'.(GETPOST('rank','int')?GETPOST('rank','int'):$wish->rang).'"></td></tr>';
   
   // Visibility
   print '<tr><td class="fieldrequired"><label for="priv">'.$langs->trans("ContactVisibility").'</label></td><td colspan="3">';
