@@ -224,7 +224,7 @@ class Wishlist extends DolibarrApi
         if ($wish->create(DolibarrApiAccess::$user) < 0) {
             throw new RestException(500, 'Error creating wish', array_merge(array($wish->error), $wish->errors));
         }
-        return $member->id;
+        return $wish->id;
     }
 
     /**
