@@ -135,6 +135,7 @@ class Wish extends CommonObject
     $sql.= " AND t.rowid=".$rowid;
     }  
 
+		dol_syslog(get_class($this)."::fetch", LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if ($resql)
 		{
