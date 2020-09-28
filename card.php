@@ -67,7 +67,7 @@ $target=GETPOST("target","int");
 $rank=GETPOST("rank","int");
 
 if ($user->societe_id) $socid=$user->societe_id;
-$result = restrictedArea($user, 'societe', $socid, '&societe');
+//$result = restrictedArea($user, 'societe', $socid, '&societe');
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('wishlistthirdparty'));
@@ -107,7 +107,7 @@ if (empty($reshook))
 		}
 	}
   
-	if ($action == 'add' && $user->rights->societe->creer)
+	if ($action == 'add' && $user->rights->wishlist->create)
 	{
 		$error=0;
 
@@ -160,7 +160,7 @@ if (empty($reshook))
 		}
 	}
   
-	if ($action == 'update' && $user->rights->societe->creer)
+	if ($action == 'update' && $user->rights->wishlist->create)
 	{
 		$error=0;
 
@@ -213,7 +213,7 @@ if (empty($reshook))
 		}
 	}
   
-	if ($user->rights->societe->creer && $action == 'confirm_delete' && GETPOST('confirm', 'alpha') == 'yes')
+	if ($user->rights->wishlist->delete && $action == 'confirm_delete' && GETPOST('confirm', 'alpha') == 'yes')
 	{
 		$result = $wish->delete($lineid, $user);
 		if ($result > 0)
@@ -256,7 +256,7 @@ llxHeader('',$title,$help_url);
 
 $head = societe_prepare_head($object);
 
-if ($socid && $action == 'create' && $user->rights->societe->creer)
+if ($socid && $action == 'create' && $user->rights->wishlist->create)
 {
 	print '<form action="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'" method="post">';
 	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
@@ -264,7 +264,7 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 	print '<input type="hidden" name="action" value="'.$actionforadd.'">';
 }
 
-if ($socid && $action == 'edit' && $user->rights->societe->creer)
+if ($socid && $action == 'edit' && $user->rights->wishlist->create)
 {
 	print '<form action="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'" method="post">';
 	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
@@ -523,14 +523,15 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
  
 		        // Actions
 		        print '<td align="center">';
-				if ($user->rights->societe->creer)
+				if ($user->rights->wishlist->create)
         {
 				print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->id.'&action=edit">';
 				print img_picto($langs->trans("Modify"), 'edit');
 				print '</a>';
-
+        }
 		   	print '&nbsp;';
-
+				if ($user->rights->wishlist->delete)
+        {
 		   	print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->id.'&action=delete">';
 		   	print img_picto($langs->trans("Delete"), 'delete');
 		   	print '</a>';
@@ -556,7 +557,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 }
 
 // Create Card
-if ($socid && $action == 'create' && $user->rights->societe->creer)
+if ($socid && $action == 'create' && $user->rights->wishlist->create)
 {
 	dol_fiche_head($head, 'wishlist', $langs->trans("ThirdParty"), 0, 'company');
 
@@ -613,7 +614,7 @@ if ($socid && $action == 'create' && $user->rights->societe->creer)
 }
 
 // Create Card
-if ($socid && $action == 'edit' && $user->rights->societe->creer)
+if ($socid && $action == 'edit' && $user->rights->wishlist->create)
 {
 	dol_fiche_head($head, 'wishlist', $langs->trans("ThirdParty"), 0, 'company');
 
