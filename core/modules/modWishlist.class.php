@@ -115,7 +115,7 @@ class modWishlist extends DolibarrModules {
         $this->rights[$r][4] = 'create';
         
         $r++;
-        $this->rights[$r][0] = 431336;
+        $this->rights[$r][0] = 431337;
         $this->rights[$r][1] = 'Supprimer les souhaits';
         $this->rights[$r][2] = 'a';
         $this->rights[$r][3] = 1;
