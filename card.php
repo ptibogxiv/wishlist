@@ -35,7 +35,7 @@ $langs->loadLangs(array("companies", "products", "orders"));
 // Security check
 $socid = GETPOST("socid", "int");
 if ($user->societe_id) $socid=$user->societe_id;
-$result = restrictedArea($user, 'societe', '', '');
+//$result = restrictedArea($user, 'societe', '', '');
 
 $rowid = GETPOST('rowid','int');
 $action = GETPOST('action', 'alpha');
@@ -66,8 +66,6 @@ $lineid=GETPOST("lineid","int");
 $target=GETPOST("target","int");
 $rank=GETPOST("rank","int");
 
-if ($user->societe_id) $socid=$user->societe_id;
-//$result = restrictedArea($user, 'societe', $socid, '&societe');
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('wishlistthirdparty'));

@@ -59,7 +59,7 @@ class modWishlist extends DolibarrModules {
 		// Module description, used if translation string 'ModuleXXXDesc' not found (where XXX is value of numeric property 'numero' of module)
 		$this->description = "Module Wishlist";
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '12.0.2';
+		$this->version = '12.0.3';
 		
 		// Key used in llx_const table to save module status enabled/disabled (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -88,8 +88,8 @@ class modWishlist extends DolibarrModules {
 
         // Array to add new pages in new tabs
         $this->tabs = array(
-            'thirdparty:+wishlist:Wishlist:wishlist@wishlist:$user->rights->wishlist->lire:/wishlist/card.php?socid=__ID__',
-            'product:+wishlist:Wishlist:wishlist@wishlist:$user->rights->wishlist->lire:/wishlist/list.php?id=__ID__'
+            'thirdparty:+wishlist:Wishlist:wishlist@wishlist:$user->rights->wishlist->read:/wishlist/card.php?socid=__ID__',
+            'product:+wishlist:Wishlist:wishlist@wishlist:$user->rights->wishlist->read:/wishlist/list.php?id=__ID__'
         );
 
         // Boxes
@@ -105,14 +105,21 @@ class modWishlist extends DolibarrModules {
         $this->rights[$r][1] = 'Lire les souhaits';
         $this->rights[$r][2] = 'a';
         $this->rights[$r][3] = 1;
-        $this->rights[$r][4] = 'lire';
+        $this->rights[$r][4] = 'read';
 
         $r++;
         $this->rights[$r][0] = 431336;
         $this->rights[$r][1] = 'Creer les souhaits';
         $this->rights[$r][2] = 'a';
         $this->rights[$r][3] = 1;
-        $this->rights[$r][4] = 'creer';
+        $this->rights[$r][4] = 'create';
+        
+        $r++;
+        $this->rights[$r][0] = 431336;
+        $this->rights[$r][1] = 'Supprimer les souhaits';
+        $this->rights[$r][2] = 'a';
+        $this->rights[$r][3] = 1;
+        $this->rights[$r][4] = 'delete';
 
 		// Main menu entries
 		$this->menus = array();			// List of menus to add
