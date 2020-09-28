@@ -87,7 +87,7 @@ class Wishlist extends DolibarrApi
      */
     public function get($id, $includestockdata = 0)
     {
-        if(! DolibarrApiAccess::$user->rights->societe->lire) {
+        if(! DolibarrApiAccess::$user->rights->wishlist->read) {
             throw new RestException(401);
         }
 
@@ -133,7 +133,7 @@ class Wishlist extends DolibarrApi
 		$socids = DolibarrApiAccess::$user->societe_id ? DolibarrApiAccess::$user->societe_id : $thirdparty_ids;
 
         $sql = "SELECT t.rowid,";
-		if ((!DolibarrApiAccess::$user->rights->societe->client->voir && !$socids) || $search_sale > 0) $sql .= ", sc.fk_soc, sc.fk_user"; // We need these fields in order to filter by sale (including the case where the user can only see his prospects)
+		if ((!DolibarrApiAccess::$user->rights->wishlist->read && !$socids) || $search_sale > 0) $sql .= ", sc.fk_soc, sc.fk_user"; // We need these fields in order to filter by sale (including the case where the user can only see his prospects)
         $sql.= " t.fk_product, t.qty, t.target";
         $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
         if ($category > 0) {
@@ -211,7 +211,7 @@ class Wishlist extends DolibarrApi
      */
     public function post($request_data = null)
     {
-        if(! DolibarrApiAccess::$user->rights->societe->creer) {
+        if(! DolibarrApiAccess::$user->rights->wishlist->create) {
             throw new RestException(401);
         }
         // Check mandatory fields
@@ -236,7 +236,7 @@ class Wishlist extends DolibarrApi
      */
     public function put($id, $request_data = null)
     {
-        if(! DolibarrApiAccess::$user->rights->societe->creer) {
+        if(! DolibarrApiAccess::$user->rights->wishlist->create) {
             throw new RestException(401);
         }
 
@@ -275,7 +275,7 @@ class Wishlist extends DolibarrApi
      */
     public function delete($id)
     {
-        if(! DolibarrApiAccess::$user->rights->societe->creer) {
+        if(! DolibarrApiAccess::$user->rights->wishlist->delete) {
             throw new RestException(401);
         }
 
