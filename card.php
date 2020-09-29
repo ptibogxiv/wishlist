@@ -380,8 +380,6 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		    if (! empty($filter))			$param.="&filter=".$filter;
 
 			print '<input class="flat" type="hidden" name="socid" value="'.$socid.'" size="12">';
-      
-      print_barre_liste('',$page,$_SERVER["PHP_SELF"],$param,$sortfield,$sortorder,'',$num,$nbtotalofrecords);
 
       if ((float) DOL_VERSION < 10) {
 	$morehtmlright='<a class="butActionNew" href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create">'.$langs->trans("AddAWish").' <span class="fa fa-plus-circle valignmiddle"></span></a>';
