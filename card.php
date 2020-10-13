@@ -257,7 +257,7 @@ $head = societe_prepare_head($object);
 if ($socid && $action == 'create' && $user->rights->wishlist->create)
 {
 	print '<form action="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'" method="post">';
-	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
 	$actionforadd='add';
 	print '<input type="hidden" name="action" value="'.$actionforadd.'">';
 }
@@ -265,7 +265,7 @@ if ($socid && $action == 'create' && $user->rights->wishlist->create)
 if ($socid && $action == 'edit' && $user->rights->wishlist->create)
 {
 	print '<form action="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'" method="post">';
-	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
 	$actionforedit='update';
 	print '<input type="hidden" name="action" value="'.$actionforedit.'">';
 }
