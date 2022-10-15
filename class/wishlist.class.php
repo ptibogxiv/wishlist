@@ -129,11 +129,11 @@ class Wish extends CommonObject
     $sql.= ', p.label, p.ref as ref, p.fk_product_type as type';
 		$sql.= ' FROM '.MAIN_DB_PREFIX.'wishlist as t LEFT JOIN '.MAIN_DB_PREFIX.'product as p ON p.rowid = t.fk_product';
 		$sql.= ' WHERE t.entity IN (' . getEntity('product').')';
-    if ($ref && $fk_soc) {
-		$sql.= " AND t.fk_product='".$fk_product."' AND t.fk_soc=".$fk_soc;
+    	if ($fk_soc) {
+			$sql.= " AND t.fk_product='".$fk_product."' AND t.fk_soc=".$fk_soc;
 		} elseif ($rowid) {
-    $sql.= " AND t.rowid=".$rowid;
-    }  
+    		$sql.= " AND t.rowid=".$rowid;
+    	}  
 
 		dol_syslog(get_class($this)."::fetch", LOG_DEBUG);
 		$resql = $this->db->query($sql);
