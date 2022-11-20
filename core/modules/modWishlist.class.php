@@ -47,8 +47,8 @@ class modWishlist extends DolibarrModules {
 		// Key text used to identify module (for permissions, menus, etc...)
 		$this->rights_class = 'wishlist';
 		// Module description used if translation string 'ModuleXXXDesc' not found (XXX is id value)
-    $this->editor_name = 'ptibogxiv.net';
-    $this->editor_url = 'https://www.ptibogxiv.net';
+    $this->editor_name = 'ptibogxiv.eu';
+    $this->editor_url = 'https://www.ptibogxiv.eu';
 		// Family can be 'crm','financial','hr','projects','products','ecm','technic','other'
 		// It is used to group modules in module setup page
 		$this->family = "products";
@@ -59,7 +59,7 @@ class modWishlist extends DolibarrModules {
 		// Module description, used if translation string 'ModuleXXXDesc' not found (where XXX is value of numeric property 'numero' of module)
 		$this->description = "Module Wishlist";
 		// Possible values for version are: 'development', 'experimental', 'dolibarr' or version
-		$this->version = '16.0.1';
+		$this->version = '16.0.2';
 		
 		// Key used in llx_const table to save module status enabled/disabled (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
