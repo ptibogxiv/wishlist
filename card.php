@@ -316,7 +316,7 @@ if ($month_end < 1) $month_end=12;
 $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false), '%Y-%m-%d'); 
 //$date_end=dol_get_last_day($year_end, $month_end, false);
   
-		$sql = "SELECT t.rowid as id, t.fk_product as product, t.qty as qty, t.target as target, t.priv, t.rang as rang";
+	$sql = "SELECT t.rowid as id, t.fk_product as product, t.entity, t.qty as qty, t.target as target, t.priv, t.rang as rang";
     $sql.= ", p.rowid, p.label, p.price, p.ref, p.fk_product_type, p.tosell, p.tobuy, p.tobatch, p.fk_price_expression";
     $sql.= ", (SELECT c.rowid FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as orderid";
     $sql.= ", (SELECT c.date_commande FROM ".MAIN_DB_PREFIX."commandedet AS d LEFT JOIN ".MAIN_DB_PREFIX."commande AS c ON c.rowid=d.fk_commande WHERE d.fk_product = t.fk_product AND c.fk_soc = ".$socid." ORDER BY c.date_commande DESC LIMIT 1) as date_commande";    
@@ -627,7 +627,7 @@ if ($socid && $action == 'edit' && $user->rights->wishlist->create)
 
 	$linkback = '<a href="'.DOL_URL_ROOT.'/societe/list.php">'.$langs->trans("BackToList").'</a>';
 
-	dol_banner_tab($object, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom');
+	dol_banner_tab($object, 'socid', $linkback, ($socid?0:1), 'rowid', 'nom');
 
   $wish->fetch($lineid);  
 
