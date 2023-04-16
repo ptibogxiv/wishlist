@@ -53,6 +53,7 @@ $sortfield = GETPOST("sortfield",'alpha');
 $sortorder = GETPOST("sortorder",'alpha');
 $page = GETPOST("page",'int');
 $filter =GETPOST("filter",'alpha');
+$status = GETPOST("status", 'int');
 
 if (empty($page) || $page == -1) { $page = 0; }     // If $page is not defined, or '' or -1
 $offset = $limit * $page ;
@@ -331,10 +332,6 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
     $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
 		$sql.= " WHERE p.entity IN (".getEntity('product').") ";
 		$sql.= " AND t.fk_soc = ".$socid;
-		if ($sall)
-		{
-			//$sql.=natural_search(array("f.firstname","d.lastname","d.societe","d.email","d.login","d.address","d.town","d.note_public","d.note_private"), $sall);
-		}
 		if ($status != '')
 		{
 		    $sql.= " AND t.statut IN (".$db->escape($status).")";     // Peut valoir un nombre ou liste de nombre separes par virgules
