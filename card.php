@@ -34,7 +34,7 @@ $langs->loadLangs(array("companies", "products", "orders"));
 
 // Security check
 $socid = GETPOST("socid", "int");
-if ($user->societe_id) $socid=$user->societe_id;
+if (isset($user->societe_id) && !empty($user->societe_id)) $socid=$user->societe_id;
 //$result = restrictedArea($user, 'societe', '', '');
 
 $rowid = GETPOST('rowid','int');
@@ -52,6 +52,8 @@ $limit = GETPOST('limit','int')?GETPOST('limit','int'):$conf->liste_limit;
 $sortfield = GETPOST("sortfield",'alpha');
 $sortorder = GETPOST("sortorder",'alpha');
 $page = GETPOST("page",'int');
+$filter =GETPOST("filter",'alpha');
+
 if (empty($page) || $page == -1) { $page = 0; }     // If $page is not defined, or '' or -1
 $offset = $limit * $page ;
 $pageprev = $page - 1;
@@ -65,6 +67,15 @@ $quantity=GETPOST("quantity","int");
 $lineid=GETPOST("lineid","int");
 $target=GETPOST("target","int");
 $rank=GETPOST("rank","int");
+
+// Get object canvas (By default, this is not defined, so standard usage of dolibarr)
+$canvas = isset($object->canvas) ? $object->canvas : GETPOST("canvas");
+$objcanvas = null;
+if (!empty($canvas)) {
+	require_once DOL_DOCUMENT_ROOT.'/core/class/canvas.class.php';
+	$objcanvas = new Canvas($db, $action);
+	$objcanvas->getCanvas('wishlist', 'card', $canvas);
+}
 
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
@@ -139,7 +150,7 @@ if (empty($reshook))
 				{
 					$error++;
 					setEventMessages($wish->error, $wish->errors, 'errors');
-					$action='create';     // Force chargement page création
+					$action='create';     // Force chargement page crï¿½ation
 				}
 			}
 
@@ -192,7 +203,7 @@ if (empty($reshook))
 				{
 					$error++;
 					//setEventMessages($companypaymentmode->error, $companypaymentmode->errors, 'errors');
-					$action='edit';     // Force chargement page création
+					$action='edit';     // Force chargement page crï¿½ation
 				}
 			}
 
@@ -278,7 +289,7 @@ dol_fiche_head($head, 'wishlist', $langs->trans("ThirdParty"), 0, 'company');
 
 $linkback = '<a href="'.DOL_URL_ROOT.'/societe/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
 
-dol_banner_tab($object, 'socid', $linkback, ($user->societe_id?0:1), 'rowid', 'nom', '', '', 0, '', '', 'arearefnobottom');
+dol_banner_tab($object, 'socid', $linkback, ($socid?0:1), 'rowid', 'nom', '', '', 0, '', '', 'arearefnobottom');
 
 dol_fiche_end();
 
