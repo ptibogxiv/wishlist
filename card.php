@@ -257,6 +257,8 @@ if ($socid > 0 && empty($object->id))
 	if ($result <= 0) dol_print_error('',$object->error);
 }
 
+// Filter on categories
+$moreforfilter = '';
 
 $title=$langs->trans("Wishlist");
 if (! empty($conf->global->MAIN_HTML_TITLE) && preg_match('/thirdpartynameonly/',$conf->global->MAIN_HTML_TITLE) && $object->name) $title=$object->name." - ".$langs->trans('Card');
@@ -447,10 +449,8 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		    while ($i < $num && $i < $conf->liste_limit)
 		    {
 		    $objp = $db->fetch_object($resql);
-        	        
-        $datefin=$db->jdate($objp->datefin);
 
-	      $product_static = new Product($db);
+	      		$product_static = new Product($db);
 				$product_static->id = $objp->rowid;
 				$product_static->ref = $objp->ref;
 				$product_static->label = $objp->label;
