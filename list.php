@@ -58,7 +58,10 @@ $label=GETPOST("label","alpha");
 $description=GETPOST("description","alpha");
 $qty=GETPOST("qty","int");
 
-if ($user->societe_id) $socid=$user->societe_id;
+// Security check
+$socid = GETPOST("socid", "int");
+if (isset($user->societe_id) && !empty($user->societe_id)) $socid=$user->societe_id;
+//$result = restrictedArea($user, 'societe', '', '');
 $result = restrictedArea($user, 'societe', $socid, '&societe');
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
@@ -111,7 +114,7 @@ $linkback = '<a href="'.DOL_URL_ROOT.'/product/list.php?restore_lastsearch_value
 $object->next_prev_filter=" fk_product_type = ".$object->type;
 
 $shownav = 1;
-if ($user->societe_id && ! in_array('product', explode(',',$conf->global->MAIN_MODULES_FOR_EXTERNAL))) $shownav=0;
+if ($socid && ! in_array('product', explode(',',$conf->global->MAIN_MODULES_FOR_EXTERNAL))) $shownav=0;
 
 dol_banner_tab($object, 'ref', $linkback, $shownav, 'ref');
 
@@ -129,10 +132,6 @@ print '<br>';
 		$sql.= " WHERE t.entity IN (".getEntity('product').")";
     $sql.= " AND t.fk_product = ".$object->id;
 
-		if ($sall)
-		{
-			//$sql.=natural_search(array("f.firstname","d.lastname","d.societe","d.email","d.login","d.address","d.town","d.note_public","d.note_private"), $sall);
-		}
 		if ($status != '')
 		{
 		    $sql.= " AND t.statut IN (".$db->escape($status).")";     // Peut valoir un nombre ou liste de nombre separes par virgules
@@ -252,10 +251,8 @@ print '<br>';
 		    {
 		        $objp = $db->fetch_object($resql);
 
-		        $datefin=$db->jdate($objp->datefin);
-
-$company_static = new Societe($db);
-$company_static->fetch($objp->socid);
+			$company_static = new Societe($db);
+			$company_static->fetch($objp->socid);
 
 		        // Lastname
           print '<tr class="oddeven">';
