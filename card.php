@@ -529,14 +529,14 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		        print '<td align="center">';
 				if ($user->rights->wishlist->create)
         {
-				print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->id.'&action=edit">';
+				print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->id.'&action=edit&token='.newToken().'">';
 				print img_picto($langs->trans("Modify"), 'edit');
 				print '</a>';
         }
 		   	print '&nbsp;';
 				if ($user->rights->wishlist->delete)
         {
-		   	print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->id.'&action=delete">';
+		   	print '<a href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&lineid='.$objp->id.'&action=delete&token='.newToken().'">';
 		   	print img_picto($langs->trans("Delete"), 'delete');
 		   	print '</a>';
 		    }
