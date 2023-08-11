@@ -125,35 +125,17 @@ class Wishlist extends DolibarrApi
 	 *@throws RestException
 	 */
     public function index($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0, $thirdparty_ids = '', $sqlfilters = '') {
-        global $db, $conf;
+        global $db;
 
         $obj_ret = array();
 
-		// case of external user, $thirdparty_ids param is ignored and replaced by user's socid
-		$socids = DolibarrApiAccess::$user->societe_id ? DolibarrApiAccess::$user->societe_id : $thirdparty_ids;
-
-        $sql = "SELECT t.rowid,";
-		if ((!DolibarrApiAccess::$user->rights->wishlist->read && !$socids) || $search_sale > 0) $sql .= ", sc.fk_soc, sc.fk_user"; // We need these fields in order to filter by sale (including the case where the user can only see his prospects)
-        $sql.= " t.fk_product, t.qty, t.target";
+        $sql = "SELECT t.rowid, t.fk_product, t.qty, t.target";
+		if ((!DolibarrApiAccess::$user->rights->wishlist->read && !$thirdparty_ids)) $sql .= ", sc.fk_soc, sc.fk_user"; // We need these fields in order to filter by sale (including the case where the user can only see his prospects)
         $sql.= " FROM ".MAIN_DB_PREFIX."wishlist as t";
-        //if ($category > 0) {
-            //$sql.= ", ".MAIN_DB_PREFIX."categorie_product as c";
-        //}
         $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = t.fk_product";
         $sql.= ' WHERE p.entity IN ('.getEntity('product').')';
-        if ($socids) $sql.= " AND t.fk_soc IN (".$socids.")";
-        // Select products of given category
-        //if ($category > 0) {
-            //$sql.= " AND c.fk_categorie = ".$db->escape($category);
-            //$sql.= " AND c.fk_product = t.rowid ";
-        //}
-        //if ($mode == 1) {
-            // Show only products
-            //$sql.= " AND t.fk_product_type = 0";
-        //} elseif ($mode == 2) {
-            // Show only services
-            //$sql.= " AND t.fk_product_type = 1";
-        //}
+        if ($thirdparty_ids) $sql.= " AND t.fk_soc IN (".$thirdparty_ids.")";
+ 
 		// Add sql filters
 		if ($sqlfilters)
 		{
@@ -164,7 +146,6 @@ class Wishlist extends DolibarrApi
 			$regexstring='\(([^:\'\(\)]+:[^:\'\(\)]+:[^:\(\)]+)\)';
 			$sql.=" AND (".preg_replace_callback('/'.$regexstring.'/', 'DolibarrApi::_forge_criteria_callback', $sqlfilters).")";
 		}
-
 		$sql.= $db->order($sortfield, $sortorder);
 		if ($limit)	{
 			if ($page < 0)
@@ -175,7 +156,6 @@ class Wishlist extends DolibarrApi
 
 			$sql.= $db->plimit($limit + 1, $offset);
 		}
-
         dol_syslog("API Rest request");
 		$result = $db->query($sql);
 
