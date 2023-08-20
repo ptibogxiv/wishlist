@@ -195,7 +195,7 @@ class Wishlist extends DolibarrApi
             throw new RestException(401);
         }
         // Check mandatory fields
-        $result = $this->_validate($request_data);
+        //$result = $this->_validate($request_data);
 
         $wish = new Wish($this->db);
         foreach($request_data as $field => $value) {

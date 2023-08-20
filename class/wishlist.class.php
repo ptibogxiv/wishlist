@@ -73,15 +73,15 @@ class Wish extends CommonObject
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."wishlist";
 		$sql.= " (datec, fk_user_author, fk_user_mod, fk_product, fk_soc, qty, target, rang, priv, entity)";
 		$sql.= " VALUES (";
-    $sql.= " '".$this->db->idate($this->datec)."'";
+		$sql.= " '".$this->db->idate($this->datec)."'";
 		$sql.= ", ".($user->id>0?$user->id:"null");	// Can be null because member can be created by a guest or a script
 		$sql.= ", null";    
 		$sql.= ", '".$this->db->escape($this->fk_product)."'";
 		$sql.= ", '".$this->db->escape($this->fk_soc)."'";
-    $sql.= ", '".$this->db->escape($this->qty)."'";
-    $sql.= ", '".(! empty($this->target) ? $this->db->escape($this->target) : "0")."'";
-    $sql.= ", '".(! empty($this->rang) ? $this->db->escape($this->rang) : "0")."'";
-    $sql.= ", '".$this->db->escape($this->priv)."'";
+		$sql.= ", '".$this->db->escape($this->qty)."'";
+		$sql.= ", '".(! empty($this->target) ? $this->db->escape($this->target) : "0")."'";
+		$sql.= ", '".(! empty($this->rang) ? $this->db->escape($this->rang) : "0")."'";
+		$sql.= ", '".$this->db->escape($this->priv)."'";
 		$sql.= ", ".$conf->entity;
 		$sql.= ")";
 		
