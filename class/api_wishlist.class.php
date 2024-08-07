@@ -120,12 +120,16 @@ class Wishlist extends DolibarrApi
 	 * @param int		$page		        Page number
 	 * @param string   	$thirdparty_ids	Thirdparty ids to filter wishlists of.
 	 * @param string    $sqlfilters         Other criteria to filter answers separated by a comma. Syntax example "(t.ref:like:'SO-%') and (t.datec:<:'20160101')" 
+     * @param bool             $pagination_data     If this parameter is set to true the response will include pagination data. Default value is false. Page starts from 0*
 	 * @return array                Array of session objects
 	 * 
 	 *@throws RestException
 	 */
-    public function index($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0, $thirdparty_ids = '', $sqlfilters = '') {
-        global $db;
+    public function index($sortfield = "t.rowid", $sortorder = 'ASC', $limit = 100, $page = 0, $thirdparty_ids = '', $sqlfilters = '', $pagination_data = false)
+    {
+        if (!DolibarrApiAccess::$user->hasRight('wishlist', 'read')) {
+			throw new RestException(403);
+		}
 
         $obj_ret = array();
 
@@ -146,40 +150,58 @@ class Wishlist extends DolibarrApi
 			$regexstring='\(([^:\'\(\)]+:[^:\'\(\)]+:[^:\(\)]+)\)';
 			$sql.=" AND (".preg_replace_callback('/'.$regexstring.'/', 'DolibarrApi::_forge_criteria_callback', $sqlfilters).")";
 		}
-		$sql.= $db->order($sortfield, $sortorder);
-		if ($limit)	{
-			if ($page < 0)
-			{
+
+		//this query will return total orders with the filters given
+		$sqlTotals = str_replace('SELECT t.rowid', 'SELECT count(t.rowid) as total', $sql);
+
+		$sql .= $this->db->order($sortfield, $sortorder);
+		if ($limit) {
+			if ($page < 0) {
 				$page = 0;
 			}
 			$offset = $limit * $page;
 
-			$sql.= $db->plimit($limit + 1, $offset);
+			$sql .= $this->db->plimit($limit + 1, $offset);
 		}
-        dol_syslog("API Rest request");
-		$result = $db->query($sql);
+
+		dol_syslog("API Rest request");
+		$result = $this->db->query($sql);
 
 		if ($result)
 		{
-			$num = $db->num_rows($result);
+			$num = $this->db->num_rows($result);
 			$min = min($num, ($limit <= 0 ? $num : $limit));
 			$i = 0;
 			while ($i < $min)
 			{
-                $obj = $db->fetch_object($result);
-                $wish_static = new Wish($db);
+                $obj = $this->db->fetch_object($result);
+                $wish_static = new Wish($this->db);
                 if($wish_static->fetch($obj->rowid)) {
                     $obj_ret[] = $this->_cleanObjectDatas($wish_static);
                 }
                 $i++;
             }
-        }
-        else {
+        } else {
             throw new RestException(503, 'Error when retrieve wish list : '.$db->lasterror());
         }
-        if(! count($obj_ret)) {
-            throw new RestException(404, 'No wish found');
-        }
+        
+        //if $pagination_data is true the response will contain element data with all values and element pagination with pagination data(total,page,limit)
+		if ($pagination_data) {
+			$totalsResult = $this->db->query($sqlTotals);
+			$total = $this->db->fetch_object($totalsResult)->total;
+
+			$tmp = $obj_ret;
+			$obj_ret = [];
+
+			$obj_ret['data'] = $tmp;
+			$obj_ret['pagination'] = [
+				'total' => (int) $total,
+				'page' => $page, //count starts from 0
+				'page_count' => ceil((int) $total / $limit),
+				'limit' => $limit
+			];
+		}
+
         return $obj_ret;
     }
  
