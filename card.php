@@ -42,8 +42,8 @@ $action = GETPOST('action', 'alpha');
 $cancel = GETPOST('cancel', 'alpha');
 $backtopage = GETPOST('backtopage', 'alpha');
 
-$search_ref	= GETPOST('search_ref','alpha');
-$search_label		= GETPOST('search_label','alpha');
+$search_ref	= GETPOST('search_ref','aZ09');
+$search_label		= GETPOST('search_label','aZ09');
 $search_qty		= GETPOST('search_qty','int');
 $type				= GETPOST('type','alpha');
 $priv				= GETPOST('priv','priv');
@@ -397,10 +397,22 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
   $morehtmlright= dolGetButtonTitle($langs->trans('AddAWish'), '', 'fa fa-plus-circle', $_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create');
       }
 
-      print load_fiche_titre($langs->trans("ListOfProductsServices"), $morehtmlright, '');
+		$option = '&socid='.GETPOSTINT('socid').'&prodid='.GETPOSTINT('prodid');
 
-      print '<div class="div-table-responsive">';
-      print '<table class="tagtable liste'.($moreforfilter?" listwithfilterbefore":"").'">'."\n";
+		// @phan-suppress-next-line PhanPluginSuspiciousParamOrder
+		print_barre_liste($langs->trans('ListOfProductsServices'), $page, $_SERVER['PHP_SELF'], $option, $sortfield, $sortorder, '', '', $nbtotalofrecords, '');
+
+		print '<form action="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'" method="POST">';
+		print '<input type="hidden" name="token" value="'.newToken().'">';
+		print '<input type="hidden" name="socid" value="'.$object->id.'">';
+		if (!empty($sortfield)) {
+			print '<input type="hidden" name="sortfield" value="'.$sortfield.'"/>';
+		}
+		if (!empty($sortorder)) {
+			print '<input type="hidden" name="sortorder" value="'.$sortorder.'"/>';
+		}
+		print '<div class="div-table-responsive-no-min">';
+		print '<table class="noborder centpercent liste">';
 
 			// Lignes des champs de filtre
 			print '<tr class="liste_titre_filter">';
@@ -421,13 +433,12 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 
 			print '<td align="center" class="liste_titre"></td>';
       
-			print '<td align="right"  class="liste_titre">';
-			print '<input type="image" class="liste_titre" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/search.png" name="button_search" value="'.dol_escape_htmltag($langs->trans("Search")).'" title="'.dol_escape_htmltag($langs->trans("Search")).'">';
-		  print '&nbsp; ';
-		  print '<input type="image" class="liste_titre" src="'.DOL_URL_ROOT.'/theme/'.$conf->theme.'/img/searchclear.png" name="button_removefilter" value="'.dol_escape_htmltag($langs->trans("RemoveFilter")).'" title="'.dol_escape_htmltag($langs->trans("RemoveFilter")).'">';
+			// Print the search button
+			print '<td class="liste_titre maxwidthsearch">';
+			$searchpicto = $form->showFilterAndCheckAddButtons(0);
+			print $searchpicto;
 			print '</td>';
-
-			print "</tr>";
+			print '</tr>';
 
 			print '<tr class="liste_titre">';
 
@@ -435,10 +446,10 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		    print_liste_field_titre($langs->trans("Ref"),$_SERVER["PHP_SELF"],"p.ref",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre($langs->trans("label"),$_SERVER["PHP_SELF"],"p.label",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre($langs->trans("Wish"),$_SERVER["PHP_SELF"],"t.qty",$param,"","",$sortfield,$sortorder);
-        print_liste_field_titre($langs->trans("Target"),$_SERVER["PHP_SELF"],"t.target",$param,"","",$sortfield,$sortorder);
+        	print_liste_field_titre($langs->trans("Target"),$_SERVER["PHP_SELF"],"t.target",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre($langs->trans("Ref"),$_SERVER["PHP_SELF"],"orderid",$param,"","",$sortfield,$sortorder);
-        print_liste_field_titre("Qty",$_SERVER["PHP_SELF"],"lastqty",$param,"","",$sortfield,$sortorder);
-        print_liste_field_titre("OrderDateShort",$_SERVER["PHP_SELF"],"date_commande",$param,"","",$sortfield,$sortorder);
+        	print_liste_field_titre("Qty",$_SERVER["PHP_SELF"],"lastqty",$param,"","",$sortfield,$sortorder);
+        	print_liste_field_titre("OrderDateShort",$_SERVER["PHP_SELF"],"date_commande",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre("ContactVisibility",$_SERVER["PHP_SELF"],"t.priv",$param,"","",$sortfield,$sortorder);
 		    print_liste_field_titre($langs->trans("Action"),$_SERVER["PHP_SELF"],"",$param,"",'width="90" align="center"',$sortfield,$sortorder);
 		    print "</tr>\n";
