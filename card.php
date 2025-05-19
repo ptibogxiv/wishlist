@@ -601,11 +601,11 @@ if ($socid && $action == 'create' && $user->rights->wishlist->create)
   			if (! empty($conf->global->ENTREPOT_EXTRA_STATUS))
 			{
 				// hide products in closed warehouse, but show products for internal transfer
-				$form->select_produits(GETPOST('productid', 'int'), 'productid', $filtertype, $conf->product->limit_size, $object->price_level, 1, 2, '', 1, array(), $object->id, '1', 0, 'maxwidth300', 0, 'warehouseopen,warehouseinternal', GETPOST('combinations', 'array'));
+				$form->select_produits(GETPOST('productid', 'int'), 'productid', $filtertype, getDolGlobalInt('limit_size'), $object->price_level, 1, 2, '', 1, array(), $object->id, '1', 0, 'maxwidth300', 0, 'warehouseopen,warehouseinternal', GETPOST('combinations', 'array'));
 			}
 			else
 			{
-				$form->select_produits(GETPOST('productid', 'int'), 'productid', $filtertype, $conf->product->limit_size, $object->price_level, 1, 2, '', 1, array(), $object->id, '1', 0, 'maxwidth300', 0, '', GETPOST('combinations', 'array'));
+				$form->select_produits(GETPOST('productid', 'int'), 'productid', $filtertype, getDolGlobalInt('limit_size'), $object->price_level, 1, 2, '', 1, array(), $object->id, '1', 0, 'maxwidth300', 0, '', GETPOST('combinations', 'array'));
 			}
   print '</td></tr>';
 

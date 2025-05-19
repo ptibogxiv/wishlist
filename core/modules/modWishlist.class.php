@@ -76,7 +76,7 @@ class modWishlist extends DolibarrModules {
     $this->requiredby = array();	// List of modules id to disable if this one is disabled
     $this->conflictwith = array();
     $this->phpmin = array(8,0);					// Minimum version of PHP required by module
-    $this->need_dolibarr_version = array(19,0);	// Minimum version of Dolibarr required by module
+    $this->need_dolibarr_version = array(21,0);	// Minimum version of Dolibarr required by module
     $this->langfiles = array("wishlist@wishlist");
 
   
