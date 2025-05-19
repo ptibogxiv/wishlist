@@ -55,12 +55,19 @@ $page = GETPOST("page",'int');
 $filter =GETPOST("filter",'alpha');
 $status = GETPOST("status", 'int');
 
-if (empty($page) || $page == -1) { $page = 0; }     // If $page is not defined, or '' or -1
-$offset = $limit * $page ;
+// Load variable for pagination
+$limit = GETPOSTINT('limit') ? GETPOSTINT('limit') : $conf->liste_limit;
+$sortfield = GETPOST('sortfield', 'aZ09comma');
+$sortorder = GETPOST('sortorder', 'aZ09comma');
+$page = GETPOSTISSET('pageplusone') ? (GETPOSTINT('pageplusone') - 1) : GETPOSTINT("page");
+if (empty($page) || $page < 0 || GETPOST('button_search', 'alpha') || GETPOST('button_removefilter', 'alpha')) {
+	// If $page is not defined, or '' or -1 or if we click on clear filters
+	$page = 0;
+}
+$offset = $limit * $page;
 $pageprev = $page - 1;
 $pagenext = $page + 1;
 if (! $sortorder) {  $sortorder="DESC"; }
-//if (! $sortfield) {  $sortfield="d.lastname"; }
 
 $label=GETPOST("label","alpha");
 $description=GETPOST("description","alpha");
@@ -395,20 +402,17 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 
 			print '<input class="flat" type="hidden" name="socid" value="'.$socid.'" size="12">';
 
-      if ((float) DOL_VERSION < 10) {
-	$morehtmlright='<a class="butActionNew" href="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create">'.$langs->trans("AddAWish").' <span class="fa fa-plus-circle valignmiddle"></span></a>';
-      } else {
-  $morehtmlright= dolGetButtonTitle($langs->trans('AddAWish'), '', 'fa fa-plus-circle', $_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create');
-      }
+   		$newcardbutton = dolGetButtonTitle($langs->trans('AddAWish'), '', 'fa fa-plus-circle', $_SERVER["PHP_SELF"].'?socid='.$object->id.'&action=create');
 
 		$option = '&socid='.GETPOSTINT('socid').'&prodid='.GETPOSTINT('prodid');
-
-		// @phan-suppress-next-line PhanPluginSuspiciousParamOrder
-		print_barre_liste($langs->trans('ListOfProductsServices'), $page, $_SERVER['PHP_SELF'], $option, $sortfield, $sortorder, '', '', $nbtotalofrecords, '');
 
 		print '<form action="'.$_SERVER["PHP_SELF"].'?socid='.$object->id.'" method="POST">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
 		print '<input type="hidden" name="socid" value="'.$object->id.'">';
+
+		// @phan-suppress-next-line PhanPluginSuspiciousParamOrder
+		print_barre_liste($langs->trans('ListOfProductsServices'), $page, $_SERVER['PHP_SELF'], $option, $sortfield, $sortorder, '', '', $nbtotalofrecords, '', 0, $newcardbutton, '', $limit, 0, 0, 1);
+
 		if (!empty($sortfield)) {
 			print '<input type="hidden" name="sortfield" value="'.$sortfield.'"/>';
 		}
