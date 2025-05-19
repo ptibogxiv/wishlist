@@ -384,7 +384,7 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		}
 		// Add order and limit
 		$sql.= " ".$db->order($sortfield,$sortorder);
-		$sql.= " ".$db->plimit($conf->liste_limit+1, $offset);
+		$sql.= " ".$db->plimit($limit+1, $offset);
 
 		$resql = $db->query($sql);
 		if ($resql)
@@ -399,6 +399,9 @@ $date_start = dol_print_date(dol_get_first_day($year_start, $month_start, false)
 		    if (! empty($search_ref))	$param.="&search_ref=".$search_ref;
 		    if (! empty($search_label))		$param.="&search_label=".$search_label;
 		    if (! empty($filter))			$param.="&filter=".$filter;
+			if ($limit > 0 && $limit != $conf->liste_limit) {
+				$param .= '&limit='.((int) $limit);
+			}	
 
 			print '<input class="flat" type="hidden" name="socid" value="'.$socid.'" size="12">';
 
